@@ -1,0 +1,28 @@
+{
+  "results": {
+    "violations": [
+      {
+        "rule_name": "noHttps",
+        "description": "TLS disabled can affect the confidentiality of the data in transit",
+        "rule_id": "AC_K8S_0001",
+        "severity": "LOW",
+        "category": "Network Security",
+        "resource_name": "ingress-demo-disallowed",
+        "resource_type": "kubernetes_ingress",
+        "file": "config.yaml",
+        "line": 1
+      }
+    ],
+    "skipped_violations": null,
+    "scan_summary": {
+      "file/folder": "/Users/suvarna/go/src/github.com/rchanger/terrascan/test/e2e/test_data/iac/resource_prioritising/max_severity_set/k8s",
+      "iac_type": "k8s",
+      "scanned_at": "2021-05-26 08:22:49.108823 +0000 UTC",
+      "policies_validated": 8,
+      "violated_policies": 1,
+      "low": 1,
+      "medium": 0,
+      "high": 0
+    }
+  }
+}

@@ -1,0 +1,17 @@
+[
+  {
+    "queryName": "SQL DB Instance Backup Disabled",
+    "severity": "MEDIUM",
+    "line": 6
+  },
+  {
+    "queryName": "SQL DB Instance Backup Disabled",
+    "severity": "MEDIUM",
+    "line": 18
+  },
+  {
+    "queryName": "SQL DB Instance Backup Disabled",
+    "severity": "MEDIUM",
+    "line": 31
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "queryName": "CMK Is Unusable",
+    "severity": "MEDIUM",
+    "line": 5,
+    "fileName": "positive1.yaml"
+  },
+  {
+    "queryName": "CMK Is Unusable",
+    "severity": "MEDIUM",
+    "line": 30,
+    "fileName": "positive1.yaml"
+  },
+  {
+    "queryName": "CMK Is Unusable",
+    "severity": "MEDIUM",
+    "line": 6,
+    "fileName": "positive2.json"
+  },
+  {
+    "queryName": "CMK Is Unusable",
+    "severity": "MEDIUM",
+    "line": 59,
+    "fileName": "positive2.json"
+  },
+  {
+    "queryName": "CMK Is Unusable",
+    "severity": "MEDIUM",
+    "line": 5,
+    "fileName": "positive3.yaml"
+  }
+]

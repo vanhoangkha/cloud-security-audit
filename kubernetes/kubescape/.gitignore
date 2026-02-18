@@ -1,0 +1,18 @@
+*.vs*
+*kubescape*
+!*Dockerfile*
+*debug*
+*vendor*
+*.pyc*
+.idea
+.history
+ca.srl
+*.out
+ks
+cosign.key
+
+dist/
+
+# Test output files
+customFilename.pdf
+customFilename.xml

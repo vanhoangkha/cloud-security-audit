@@ -1,0 +1,32 @@
+[
+  {
+    "queryName": "CPU Requests Not Set",
+    "severity": "LOW",
+    "line": 8
+  },
+  {
+    "queryName": "CPU Requests Not Set",
+    "severity": "LOW",
+    "line": 42
+  },
+  {
+    "queryName": "CPU Requests Not Set",
+    "severity": "LOW",
+    "line": 77
+  },
+  {
+    "queryName": "CPU Requests Not Set",
+    "severity": "LOW",
+    "line": 134
+  },
+  {
+    "queryName": "CPU Requests Not Set",
+    "severity": "LOW",
+    "line": 192
+  },
+  {
+    "queryName": "CPU Requests Not Set",
+    "severity": "LOW",
+    "line": 258
+  }
+]

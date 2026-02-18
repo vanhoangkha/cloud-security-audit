@@ -1,0 +1,10 @@
+{
+  "id": "<ID>",
+  "queryName": "<QUERY_NAME>",
+  "severity": "HIGH",
+  "category": null,
+  "descriptionText": "<TEXT>",
+  "descriptionUrl": "#",
+  "platform": "Dockerfile",
+  "aggregation": 1
+}

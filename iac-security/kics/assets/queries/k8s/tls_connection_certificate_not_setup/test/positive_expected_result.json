@@ -1,0 +1,32 @@
+[
+  {
+    "queryName": "TSL Connection Certificate Not Setup",
+    "severity": "MEDIUM",
+    "line": 11,
+    "filename": "positive1.yaml"
+  },
+  {
+    "queryName": "TSL Connection Certificate Not Setup",
+    "severity": "MEDIUM",
+    "line": 11,
+    "filename": "positive1.yaml"
+  },
+  {
+    "queryName": "TSL Connection Certificate Not Setup",
+    "severity": "MEDIUM",
+    "line": 2,
+    "filename": "positive2.yaml"
+  },
+  {
+    "queryName": "TSL Connection Certificate Not Setup",
+    "severity": "MEDIUM",
+    "line": 2,
+    "filename": "positive2.yaml"
+  },
+  {
+    "queryName": "TSL Connection Certificate Not Setup",
+    "severity": "MEDIUM",
+    "line": 2,
+    "filename": "positive3.json"
+  }
+]

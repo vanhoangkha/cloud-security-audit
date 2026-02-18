@@ -1,0 +1,26 @@
+[
+  {
+    "fileName": "positive1.yaml",
+    "queryName": "ECS Task Definition Invalid CPU or Memory",
+    "severity": "LOW",
+    "line": 42
+  },
+  {
+    "queryName": "ECS Task Definition Invalid CPU or Memory",
+    "severity": "LOW",
+    "line": 58,
+    "fileName": "positive1.yaml"
+  },
+  {
+    "queryName": "ECS Task Definition Invalid CPU or Memory",
+    "severity": "LOW",
+    "line": 63,
+    "fileName": "positive2.json"
+  },
+  {
+    "queryName": "ECS Task Definition Invalid CPU or Memory",
+    "severity": "LOW",
+    "line": 93,
+    "fileName": "positive2.json"
+  }
+]

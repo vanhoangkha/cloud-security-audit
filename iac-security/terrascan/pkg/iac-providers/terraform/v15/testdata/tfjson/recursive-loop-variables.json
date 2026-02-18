@@ -1,0 +1,24 @@
+{
+  "null_resource": [
+    {
+      "id": "null_resource.example",
+      "name": "example",
+      "module_name": "dummy",
+      "source": "dummy/main.tf",
+      "plan_root": "./",
+      "line": 5,
+      "type": "null_resource",
+      "config": {
+        "container_definitions": "${templatefile(\n    ${path.module}/${var.filename},\n    {\n      foo = \"bar\"\n    }\n  )}"
+      },
+      "line_config": {
+        "container_definitions": 6
+      },
+      "skip_rules": null,
+      "max_severity": "",
+      "min_severity": "",
+      "terraform_version": "0.15.0",
+      "provider_version": "3.2.1"
+    }
+  ]
+}

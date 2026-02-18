@@ -1,0 +1,57 @@
+version: "2"
+linters:
+  enable:
+    - bodyclose
+    - gosec
+    - nolintlint
+  disable:
+    - dupl
+    - errcheck
+    - gochecknoglobals
+    - gochecknoinits
+    - gocognit
+    - gocritic
+    - lll
+    - nakedret
+    - revive
+    - unconvert
+    - unparam
+  settings:
+    dupl:
+      threshold: 200
+    gocognit:
+      min-complexity: 65
+    goconst:
+      min-len: 3
+      min-occurrences: 2
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - linters:
+          - revive
+        text: var-naming
+      - linters:
+          - revive
+        text: type name will be used as (.+?) by other packages, and that stutters
+      - linters:
+          - staticcheck
+        text: ST1003
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

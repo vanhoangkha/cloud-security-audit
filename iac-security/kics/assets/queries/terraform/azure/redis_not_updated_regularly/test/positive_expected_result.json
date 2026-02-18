@@ -1,0 +1,7 @@
+[
+  {
+    "queryName": "Redis Not Updated Regularly",
+    "severity": "MEDIUM",
+    "line": 1
+  }
+]

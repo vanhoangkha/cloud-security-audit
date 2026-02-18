@@ -1,0 +1,27 @@
+name: validate-dkr-samples
+
+on:
+  pull_request:
+    paths:
+    - "assets/queries/docker/**/test/*.dockerfile"
+
+jobs:
+  validate-dockerfile-syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Get Hadolint
+        run: |
+          mkdir -p .bin
+          wget https://github.com/hadolint/hadolint/releases/download/v1.21.0/hadolint-Linux-x86_64
+          mv hadolint-Linux-x86_64 .bin/hadolint
+          chmod +x .bin/hadolint
+      - name: Validate dockerfiles syntax
+        run: |
+          python3 -u .github/scripts/samples-linters/validate-syntax.py \
+            "assets/queries/docker/**/test/*.dockerfile" \
+            --linter .bin/hadolint \
+            --skip .github/scripts/samples-linters/ignore-list/docker \
+            --extra ' -c .github/scripts/samples-linters/hadolint.yml'

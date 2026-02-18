@@ -1,0 +1,12 @@
+[
+  {
+    "queryName": "Neptune Cluster With IAM Database Authentication Disabled",
+    "severity": "HIGH",
+    "line": 1
+  },
+  {
+    "queryName": "Neptune Cluster With IAM Database Authentication Disabled",
+    "severity": "HIGH",
+    "line": 17
+  }
+]

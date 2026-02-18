@@ -1,0 +1,32 @@
+[
+  {
+    "queryName": "Security Group Ingress Not Restricted",
+    "severity": "HIGH",
+    "line": 8
+  },
+  {
+    "queryName": "Security Group Ingress Not Restricted",
+    "severity": "HIGH",
+    "line": 12
+  },
+  {
+    "queryName": "Security Group Ingress Not Restricted",
+    "severity": "HIGH",
+    "line": 16
+  },
+  {
+    "queryName": "Security Group Ingress Not Restricted",
+    "severity": "HIGH",
+    "line": 27
+  },
+  {
+    "queryName": "Security Group Ingress Not Restricted",
+    "severity": "HIGH",
+    "line": 31
+  },
+  {
+    "queryName": "Security Group Ingress Not Restricted",
+    "severity": "HIGH",
+    "line": 35
+  }
+]

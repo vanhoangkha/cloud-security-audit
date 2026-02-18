@@ -1,49 +1,122 @@
-# Cloud Security Audit Tools
+# Cloud Security Audit Tools Collection
 
-Collection of cloud security audit tools for AWS, GCP, and Azure.
+Comprehensive collection of open-source cloud security tools for AWS, GCP, Azure, and Kubernetes.
 
-## Tools Included
+## 📁 Structure
 
-### Multi-Cloud (Already installed via pip/apt)
-| Tool | AWS | GCP | Azure | Command |
-|------|-----|-----|-------|---------|
-| Prowler | ✅ | ✅ | ✅ | `prowler aws/gcp/azure` |
-| ScoutSuite | ✅ | ✅ | ✅ | `scout aws/gcp/azure` |
-| CloudSploit | ✅ | ✅ | ✅ | `cloudsploit scan --cloud <provider>` |
-| Checkov | ✅ | ✅ | ✅ | `checkov -d .` |
-| Steampipe | ✅ | ✅ | ✅ | `steampipe query` |
+```
+├── aws/                    # AWS-specific tools
+├── azure/                  # Azure-specific tools
+├── gcp/                    # GCP-specific tools
+├── kubernetes/             # Kubernetes security tools
+├── iac-security/           # Infrastructure as Code scanning
+├── secrets-detection/      # Secret scanning tools
+└── multi-cloud/            # Multi-cloud tools
+```
 
-### GCP Specific
-- **gcp-audit/** - CIS Benchmark compliance scripts
+## 🛠️ Tools Included
 
-### Azure Specific
-- **azure-audit/** - Azure compliance audit scripts
-- **AzureInspect/** - PowerShell audit with HTML reports
-- **Stormspotter/** - Azure AD visualization
+### Multi-Cloud (`multi-cloud/`)
+| Tool | Description |
+|------|-------------|
+| **Prowler** | AWS/GCP/Azure security assessments, CIS benchmarks |
+| **ScoutSuite** | Multi-cloud security auditing |
+| **CloudSploit** | Cloud security configuration monitoring |
+| **Cloud Custodian** | Rules engine for cloud resource management |
 
-## Usage
+### AWS (`aws/`)
+| Tool | Description |
+|------|-------------|
+| **Pacu** | AWS exploitation framework (pentesting) |
+| **Cloudsplaining** | IAM policy analysis |
+| **Arsenal AWS Security** | Curated list of AWS security tools |
 
-### AWS
+### Azure (`azure/`)
+| Tool | Description |
+|------|-------------|
+| **Azure-Audit** | Compliance audit scripts |
+| **AzureInspect** | PowerShell audit with HTML reports |
+| **Stormspotter** | Azure AD visualization |
+
+### GCP (`gcp/`)
+| Tool | Description |
+|------|-------------|
+| **GCP-Audit** | CIS Benchmark compliance scripts |
+
+### Kubernetes (`kubernetes/`)
+| Tool | Description |
+|------|-------------|
+| **Trivy** | Vulnerability scanner for containers/IaC |
+| **Kube-bench** | CIS Kubernetes Benchmark checks |
+| **Kubescape** | Kubernetes security platform |
+| **Falco** | Runtime security monitoring |
+
+### IaC Security (`iac-security/`)
+| Tool | Description |
+|------|-------------|
+| **Checkov** | Static analysis for Terraform, CloudFormation, K8s |
+| **KICS** | 2400+ queries for IaC security |
+| **Terrascan** | Detect compliance violations in IaC |
+| **tfsec** | Terraform static analysis |
+
+### Secrets Detection (`secrets-detection/`)
+| Tool | Description |
+|------|-------------|
+| **TruffleHog** | Find leaked credentials |
+| **Gitleaks** | Git secret scanning |
+
+## 🚀 Quick Start
+
+### Install CLI Tools
 ```bash
+# Multi-cloud
+pip install prowler scoutsuite cloudsploit checkov
+
+# Kubernetes
+brew install trivy kubescape
+
+# Secrets
+brew install trufflehog gitleaks
+```
+
+### Run Scans
+```bash
+# AWS
 prowler aws
 scout aws
-```
 
-### GCP
-```bash
+# GCP
 prowler gcp --project-id PROJECT_ID
 scout gcp --user-account
-cd gcp-audit/src && ./cis-1.1.1-project-iam-policy.sh
-```
 
-### Azure
-```bash
+# Azure
 prowler azure --subscription-id SUB_ID
 scout azure --cli
-pwsh AzureInspect/AzureInspect.ps1
+
+# Kubernetes
+trivy k8s --report summary cluster
+kubescape scan framework nsa
+
+# IaC
+checkov -d ./terraform
+tfsec ./terraform
+
+# Secrets
+trufflehog git file://./repo
+gitleaks detect -s ./repo
 ```
 
-## Prerequisites
+## 📋 Prerequisites
 - AWS: `aws configure`
 - GCP: `gcloud auth login`
 - Azure: `az login`
+- Kubernetes: `kubectl` configured
+
+## 📚 References
+- [Prowler](https://github.com/prowler-cloud/prowler)
+- [ScoutSuite](https://github.com/nccgroup/ScoutSuite)
+- [Trivy](https://github.com/aquasecurity/trivy)
+- [Checkov](https://github.com/bridgecrewio/checkov)
+
+## 📄 License
+Each tool maintains its original license. See individual tool directories.

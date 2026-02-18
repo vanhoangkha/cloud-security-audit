@@ -1,0 +1,182 @@
+builds:
+  - id: tfsec
+    main: ./cmd/tfsec
+    binary: tfsec
+    ldflags:
+      - "-X github.com/aquasecurity/tfsec/version.Version={{.Tag}} -s -w -extldflags '-fno-PIC -static'"
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+  - id: tfsec-checkgen
+    main: ./cmd/tfsec-checkgen
+    binary: tfsec-checkgen
+    ldflags:
+      - "-X github.com/aquasecurity/tfsec/version.Version={{.Tag}} -s -w -extldflags '-fno-PIC -static'"
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+checksum:
+  name_template: "{{ .ProjectName }}_checksums.txt"
+
+snapshot:
+  name_template: "{{ .Tag }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+signs:
+  - artifacts: binary
+    signature: "${artifact}.D66B222A3EA4C25D5D1A097FC34ACEFB46EC39CE.sig"
+
+archives:
+  - format: binary
+    name_template: "{{ .Binary}}-{{ .Os }}-{{ .Arch }}"
+
+release:
+  prerelease: auto
+  github:
+    owner: aquasecurity
+    name: tfsec
+
+dockers:
+  - image_templates: ["aquasec/{{ .ProjectName }}:{{ .Tag }}-amd64"]
+    ids:
+      - tfsec
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - --build-arg
+      - --no-cache
+      - --platform=linux/amd64
+  - image_templates: ["aquasec/{{ .ProjectName }}:{{ .Tag }}-arm64v8"]
+    ids:
+      - tfsec
+    goarch: arm64
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - --platform=linux/arm64/v8
+  - image_templates: ["aquasec/{{ .ProjectName }}-alpine:{{ .Tag }}-amd64"]
+    ids:
+      - tfsec
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - --platform=linux/amd64
+  - image_templates: ["aquasec/{{ .ProjectName }}-alpine:{{ .Tag }}-arm64v8"]
+    ids:
+      - tfsec
+    goarch: arm64
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - --platform=linux/arm64/v8
+  - image_templates: ["aquasec/{{ .ProjectName }}-scratch:{{ .Tag }}-amd64"]
+    ids:
+      - tfsec
+    dockerfile: Dockerfile.scratch
+    use: buildx
+    build_flag_templates:
+      - --platform=linux/amd64
+  - image_templates: ["aquasec/{{ .ProjectName }}-scratch:{{ .Tag }}-arm64v8"]
+    ids:
+      - tfsec
+    dockerfile: Dockerfile.scratch
+    use: buildx
+    build_flag_templates:
+      - --platform=linux/arm64/v8
+  - image_templates: ["aquasec/{{ .ProjectName }}-ci:{{ .Tag }}-amd64"]
+    ids:
+      - tfsec
+    dockerfile: Dockerfile.ci
+    use: buildx
+    build_flag_templates:
+      - --platform=linux/amd64
+  - image_templates: ["aquasec/{{ .ProjectName }}-ci:{{ .Tag }}-arm64v8"]
+    ids:
+      - tfsec
+    dockerfile: Dockerfile.ci
+    use: buildx
+    build_flag_templates:
+      - --platform=linux/arm64/v8
+
+docker_manifests:
+  - name_template: "aquasec/{{ .ProjectName }}:{{ .Tag }}"
+    image_templates:
+      - aquasec/{{ .ProjectName }}:{{ .Tag }}-arm64v8
+      - aquasec/{{ .ProjectName }}:{{ .Tag }}-amd64
+  - name_template: "aquasec/{{ .ProjectName }}:latest"
+    image_templates:
+      - aquasec/{{ .ProjectName }}:{{ .Tag }}-arm64v8
+      - aquasec/{{ .ProjectName }}:{{ .Tag }}-amd64
+  - name_template: "aquasec/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}"
+    skip_push: auto
+    image_templates:
+      - aquasec/{{ .ProjectName }}:{{ .Tag }}-arm64v8
+      - aquasec/{{ .ProjectName }}:{{ .Tag }}-amd64
+  - name_template: "aquasec/{{ .ProjectName }}-alpine:{{ .Tag }}"
+    image_templates:
+      - aquasec/{{ .ProjectName }}-alpine:{{ .Tag }}-arm64v8
+      - aquasec/{{ .ProjectName }}-alpine:{{ .Tag }}-amd64
+  - name_template: "aquasec/{{ .ProjectName }}-alpine:latest"
+    image_templates:
+      - aquasec/{{ .ProjectName }}-alpine:{{ .Tag }}-arm64v8
+      - aquasec/{{ .ProjectName }}-alpine:{{ .Tag }}-amd64
+  - name_template: "aquasec/{{ .ProjectName }}-alpine:v{{ .Major }}.{{ .Minor }}"
+    skip_push: auto
+    image_templates:
+      - aquasec/{{ .ProjectName }}-alpine:{{ .Tag }}-arm64v8
+      - aquasec/{{ .ProjectName }}-alpine:{{ .Tag }}-amd64
+  - name_template: "aquasec/{{ .ProjectName }}-scratch:{{ .Tag }}"
+    image_templates:
+      - aquasec/{{ .ProjectName }}-scratch:{{ .Tag }}-arm64v8
+      - aquasec/{{ .ProjectName }}-scratch:{{ .Tag }}-amd64
+  - name_template: "aquasec/{{ .ProjectName }}-scratch:latest"
+    image_templates:
+      - aquasec/{{ .ProjectName }}-scratch:{{ .Tag }}-arm64v8
+      - aquasec/{{ .ProjectName }}-scratch:{{ .Tag }}-amd64
+  - name_template: "aquasec/{{ .ProjectName }}-scratch:v{{ .Major }}.{{ .Minor }}"
+    skip_push: auto
+    image_templates:
+      - aquasec/{{ .ProjectName }}-scratch:{{ .Tag }}-arm64v8
+      - aquasec/{{ .ProjectName }}-scratch:{{ .Tag }}-amd64
+  - name_template: "aquasec/{{ .ProjectName }}-ci:{{ .Tag }}"
+    image_templates:
+      - aquasec/{{ .ProjectName }}-ci:{{ .Tag }}-arm64v8
+      - aquasec/{{ .ProjectName }}-ci:{{ .Tag }}-amd64
+  - name_template: "aquasec/{{ .ProjectName }}-ci:latest"
+    image_templates:
+      - aquasec/{{ .ProjectName }}-ci:{{ .Tag }}-arm64v8
+      - aquasec/{{ .ProjectName }}-ci:{{ .Tag }}-amd64
+  - name_template: "aquasec/{{ .ProjectName }}-ci:v{{ .Major }}.{{ .Minor }}"
+    skip_push: auto
+    image_templates:
+      - aquasec/{{ .ProjectName }}-ci:{{ .Tag }}-arm64v8
+      - aquasec/{{ .ProjectName }}-ci:{{ .Tag }}-amd64
+
+announce:
+  slack:
+    enabled: true
+    message_template: ":tada: tfsec {{.Tag}} is now available!!!! :tada:"
+    channel: "#tfsec"
+    username: "tfsec Town Cryer"
+
+  twitter:
+    enabled: false
+    message_template: "🎉 tfsec {{.Tag}} is available now!! See what's new here - https://github.com/aquasecurity/tfsec/releases/tag/{{.Tag}}"

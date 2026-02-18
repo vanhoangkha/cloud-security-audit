@@ -1,0 +1,12 @@
+[
+  {
+    "queryName": "Password Without Reuse Prevention",
+    "severity": "LOW",
+    "line": 7
+  },
+  {
+    "queryName": "Password Without Reuse Prevention",
+    "severity": "LOW",
+    "line": 10
+  }
+]

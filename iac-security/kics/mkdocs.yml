@@ -1,0 +1,122 @@
+# Project
+site_name: KICS
+site_url: http://docs.kics.io
+site_description: >-
+  Open source solution for static code analysis of Infrastructure as Code. Finding security vulnerabilities, compliance issues, and infrastructure misconfigurations during project development cycle.
+copyright: >-
+  &copy; 2025 Checkmarx Ltd. All Rights Reserved.
+
+# Repo
+repo_name: GitHub
+repo_url: https://github.com/Checkmarx/kics/
+
+extra:
+  version:
+    provider: mike
+
+theme:
+  name: material
+  logo: img/logo/Checkmarx_Kics_Logo_fit_to_content.png
+  favicon: img/logo/kics-donkey.ico
+  features:
+    - navigation.tabs
+    - toc.integrate
+  palette:
+    - scheme: default
+
+# Navigation
+nav:
+  - Getting Started: getting-started.md
+  - Documentation:
+      - Installation: documentation.md
+      - Command Line Interface: commands.md
+      - Configuration: configuration-file.md
+      - Running KICS: running-kics.md
+      - Results: results.md
+      - Platforms: platforms.md
+      - Utilities: utilities.md
+      - Architecture: architecture.md
+      - Auto Remediation : kics_auto_remediation.md
+      - Certifications: certifications.md
+      - Future Improvements: future_improvements.md
+      - Changes in v1.3.0: changes.md
+      - Changes in v1.6.0: changes1_6.md
+      - Changes in v1.7.0: changes1_7.md
+  - Queries:
+      - General Info: queries.md
+      - Creating Queries: creating-queries.md
+      - Passwords And Secrets: secrets.md
+      - Bill of Materials: bom.md
+      - Queries List:
+          - All: queries/all-queries.md
+          - Ansible: queries/ansible-queries.md
+          - Azure Resource Manager: queries/azureresourcemanager-queries.md
+          - Buildah: queries/buildah-queries.md
+          - CICD: queries/cicd-queries.md
+          - CloudFormation: queries/cloudformation-queries.md
+          - Common: queries/common-queries.md
+          - Crossplane: queries/crossplane-queries.md
+          - Docker Compose: queries/dockercompose-queries.md
+          - Dockerfile: queries/dockerfile-queries.md
+          - Google Deployment Manager: queries/googledeploymentmanager-queries.md
+          - gRPC: queries/grpc-queries.md
+          - Knative: queries/knative-queries.md
+          - Kubernetes: queries/kubernetes-queries.md
+          - OpenAPI: queries/openapi-queries.md
+          - Pulumi: queries/pulumi-queries.md
+          - ServerlessFW: queries/serverlessfw-queries.md
+          - Terraform: queries/terraform-queries.md
+  - Integrations:
+      - Overview: integrations.md
+      - Azure DevOps: integrations_azurepipelines.md
+      - Bamboo: integrations_bamboo.md
+      - Bitbucket Pipelines: integrations_bitbucketpipelines.md
+      - CircleCI: integrations_circleci.md
+      - Codefresh: integrations_codefresh.md
+      - Github Actions: integrations_ghactions.md
+      - Gitlab CI: integrations_gitlabci.md
+      - Jenkins: integrations_jenkins.md
+      - TeamCity: integrations_teamcity.md
+      - Travis CI: integrations_travisci.md
+      - Terraform Cloud: integrations_tfcloud.md
+      - AWS CodeBuild: integrations_aws_codebuild.md
+      - Badge: BADGE.md
+      - Using pre-commit hooks: integrations_pre_commit.md
+      - Terraformer: integrations_terraformer.md
+      - KICS Auto Scanning: integrations_auto_scanning_visual_studio.md
+      - Kuberneter: integrations_kuberneter.md
+      - AWS CDK: integrations_aws_cdk.md
+  - Project:
+      - Roadmap: roadmap.md
+      - Plans: "https://github.com/Checkmarx/kics/projects"
+      - Issues: "https://github.com/Checkmarx/kics/issues"
+      - Releases: releases.md
+      - Performance: performance.md
+  - Contribution: CONTRIBUTING.md
+  - Community: community.md
+  - About: about.md
+
+extra_css:
+  - css/custom.css
+
+extra_javascript:
+  - js/version-mike.js
+  - js/custom.js
+
+# Plugins
+plugins:
+  - search:
+      prebuild_index: true
+google_analytics:
+  - UA-186818347-2
+  - auto
+
+markdown_extensions:
+  - tables
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - toc:
+      permalink: true
+      toc_depth: 2
+      separator: "_"

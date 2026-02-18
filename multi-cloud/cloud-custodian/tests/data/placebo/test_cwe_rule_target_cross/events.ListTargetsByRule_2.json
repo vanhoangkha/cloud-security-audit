@@ -1,0 +1,13 @@
+{
+    "status_code": 200,
+    "data": {
+        "Targets": [
+            {
+                "Id": "Ide928b09c-d065-49a9-83ff-2a712f97dd21",
+                "Arn": "arn:aws:events:us-east-1:644160558198:event-bus/custom-event-bus",
+                "RoleArn": "arn:aws:iam::644160558196:role/service-role/Amazon_EventBridge_Invoke_Event_Bus_204419053"
+            }
+        ],
+        "ResponseMetadata": {}
+    }
+}

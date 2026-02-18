@@ -1,0 +1,17 @@
+[
+  {
+    "queryName": "Readiness Probe Is Not Configured",
+    "severity": "MEDIUM",
+    "line": 7
+  },
+  {
+    "queryName": "Readiness Probe Is Not Configured",
+    "severity": "MEDIUM",
+    "line": 60
+  },
+  {
+    "queryName": "Readiness Probe Is Not Configured",
+    "severity": "MEDIUM",
+    "line": 89
+  }
+]

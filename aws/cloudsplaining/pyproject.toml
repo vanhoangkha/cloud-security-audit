@@ -1,0 +1,166 @@
+[project]
+name = "cloudsplaining"
+version = "0.9.0"
+description = "AWS IAM Security Assessment tool that identifies violations of least privilege and generates a risk-prioritized HTML report"
+authors = [
+    { name = "Kinnaird McQuade", email = "kinnairdm@gmail.com" }
+]
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["aws", "iam", "roles", "policy", "policies", "privileges", "security"]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Typing :: Typed"
+]
+readme = "README.md"
+
+requires-python = ">=3.10"
+
+dependencies = [
+    "boto3>=1.40.0,<2.0.0",
+    "botocore>=1.40.0,<2.0.0",
+    "click>=8.1.0,<9.0.0",
+    "click_option_group>=0.5.9,<0.6.0",
+    "jinja2>=3.1.0,<4.0.0",
+    "policy_sentry>=0.15.0,<0.16.0",
+    "pyyaml>=6.0.0,<7.0.0",
+    "schema>=0.7.0,<0.8.0",
+]
+
+[project.scripts]
+cloudsplaining = "cloudsplaining.bin.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/salesforce/cloudsplaining"
+Repository = "https://github.com/salesforce/cloudsplaining"
+Code = "https://github.com/salesforce/cloudsplaining"
+Documentation = "https://cloudsplaining.readthedocs.io/"
+"Example Report" = "https://opensource.salesforce.com/cloudsplaining"
+"Red Team Report" = "https://opensource.salesforce.com/policy_sentry"
+Twitter = "https://twitter.com/kmcquade3"
+
+[dependency-groups]
+dev = [
+    "coverage>=7.13.0,<8.0.0",
+    "moto[sts]>=5.1.0,<6.0.0",
+    "prek>=0.3.2,<0.4.0",
+    "pytest>=9.0.0,<10.0.0",
+    "rust-just>=1.46.0,<2.0.0",
+    "ty>=0.0.17,<0.1.0",
+    "types-boto3-lite[iam,s3,sts]>=1.40.0,<2.0.0",
+    "types-pyyaml>=6.0.12,<7.0.0",
+]
+
+docs = [
+    "atomicwrites>=1.4.0,<2.0.0",
+    "distlib>=0.4.0,<0.5.0",
+    "docutils>=0.22.0,<0.23.0",
+    "filelock>=3.20.0,<4.0.0",
+    "mkdocs>=1.6.0,<2.0.0",
+    "mkdocs-material>=9.6.0,<10.0.0",
+    "mkdocs-material-extensions>=1.3.0,<2.0.0",
+    "mkdocstrings>=1.0.0,<2.0.0",
+    "mkdocstrings-python>=2.0.0,<3.0.0",
+    "mkdocstrings-python-legacy>=0.2.0,<0.3.0",
+    "pygments>=2.19.0,<3.0.0",
+    "pymdown-extensions>=10.16.0,<11.0.0",
+    "pytkdocs>=0.16.0,<0.17.0",
+]
+
+[build-system]
+requires = ["uv_build~=0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv]
+required-version = "~=0.10.0"
+
+[tool.uv.build-backend]
+module-name = "cloudsplaining"
+module-root = ""
+source-include = ["test/**"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+preview = true
+select = [
+    "A",
+    "ANN",
+    "ARG",
+    "B",
+    "C4",
+    "E",
+    "F",
+    "FA",
+    "FURB",
+    "I",
+    "ISC",
+    "LOG",
+    "N",
+    "PERF",
+    "PIE",
+    "PLE",
+    "PLW",
+    "PTH",
+    "PYI",
+    "RET",
+    "RUF",
+    "S",
+    "SIM",
+    "T10",
+    "TC",
+    "UP",
+    "W",
+    "YTT",
+]
+ignore = ["E501"] # ruff fromat takes care of it
+
+fixable = ["I001"]
+
+[tool.pytest.ini_options]
+testpaths = [
+    "test",
+    "test/command",
+    "test/output",
+    "test/scanning",
+    "test/shared",
+]
+norecursedirs = [
+    "_build",
+    "tmp*",
+    "__pycache__",
+]
+
+[tool.coverage.report]
+omit = [
+    # omit anything in a .local directory anywhere
+    "*/.local/*",
+    "*/virtualenv/*",
+    "*/venv/*",
+    "*/.venv/*",
+    "*/docs/*",
+    "*/examples/*",
+    "utils/*",
+    # Where we want to skip
+    "cloudsplaining/command/download.py",
+    "cloudsplaining/shared/constants.py",
+    "cloudsplaining/command/expand_policy.py",
+    "cloudsplaining/command/create_exclusions_file.py",
+    "cloudsplaining/output/data_file.py",
+    "cloudsplaining/output/html_report.py",
+    "cloudsplaining/output/triage_worksheet.py",
+]
+
+[tool.ty.environment]
+python-version = "3.10"
+
+[tool.ty.src]
+include = ["examples", "cloudsplaining", "utils"]

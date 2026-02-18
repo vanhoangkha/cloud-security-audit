@@ -1,0 +1,98 @@
+[
+  {
+    "queryName": "EMR Security Configuration Encryption Disabled",
+    "severity": "MEDIUM",
+    "line": 8,
+    "fileName": "positive1.yaml"
+  },
+  {
+    "queryName": "EMR Security Configuration Encryption Disabled",
+    "severity": "MEDIUM",
+    "line": 9,
+    "fileName": "positive1.yaml"
+  },
+  {
+    "queryName": "EMR Security Configuration Encryption Disabled",
+    "severity": "MEDIUM",
+    "line": 9,
+    "fileName": "positive2.yaml"
+  },
+  {
+    "queryName": "EMR Security Configuration Encryption Disabled",
+    "severity": "MEDIUM",
+    "line": 10,
+    "fileName": "positive2.yaml"
+  },
+  {
+    "queryName": "EMR Security Configuration Encryption Disabled",
+    "severity": "MEDIUM",
+    "line": 8,
+    "fileName": "positive3.yaml"
+  },
+  {
+    "queryName": "EMR Security Configuration Encryption Disabled",
+    "severity": "MEDIUM",
+    "line": 9,
+    "fileName": "positive3.yaml"
+  },
+  {
+    "queryName": "EMR Security Configuration Encryption Disabled",
+    "severity": "MEDIUM",
+    "line": 6,
+    "fileName": "positive4.yaml"
+  },
+  {
+    "queryName": "EMR Security Configuration Encryption Disabled",
+    "severity": "MEDIUM",
+    "line": 9,
+    "fileName": "positive5.json"
+  },
+  {
+    "queryName": "EMR Security Configuration Encryption Disabled",
+    "severity": "MEDIUM",
+    "line": 10,
+    "fileName": "positive5.json"
+  },
+  {
+    "queryName": "EMR Security Configuration Encryption Disabled",
+    "severity": "MEDIUM",
+    "line": 9,
+    "fileName": "positive6.json"
+  },
+  {
+    "queryName": "EMR Security Configuration Encryption Disabled",
+    "severity": "MEDIUM",
+    "line": 10,
+    "fileName": "positive6.json"
+  },
+  {
+    "queryName": "EMR Security Configuration Encryption Disabled",
+    "severity": "MEDIUM",
+    "line": 8,
+    "fileName": "positive7.json"
+  },
+  {
+    "queryName": "EMR Security Configuration Encryption Disabled",
+    "severity": "MEDIUM",
+    "line": 9,
+    "fileName": "positive7.json"
+  },
+  {
+    "queryName": "EMR Security Configuration Encryption Disabled",
+    "severity": "MEDIUM",
+    "line": 7,
+    "fileName": "positive8.json"
+  },
+  {
+    "queryName": "EMR Security Configuration Encryption Disabled",
+    "severity": "MEDIUM",
+    "line": 8,
+    "fileName": "positive9.yaml"
+  },
+  {
+    "queryName": "EMR Security Configuration Encryption Disabled",
+    "severity": "MEDIUM",
+    "line": 9,
+    "fileName": "positive9.yaml"
+  }
+]

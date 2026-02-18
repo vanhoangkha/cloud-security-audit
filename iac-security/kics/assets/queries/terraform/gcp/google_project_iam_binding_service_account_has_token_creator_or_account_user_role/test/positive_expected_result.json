@@ -1,0 +1,22 @@
+[
+  {
+    "queryName": "Google Project IAM Binding Service Account has Token Creator or Account User Role",
+    "severity": "HIGH",
+    "line": 3
+  },
+  {
+    "queryName": "Google Project IAM Binding Service Account has Token Creator or Account User Role",
+    "severity": "HIGH",
+    "line": 13
+  },
+  {
+    "queryName": "Google Project IAM Binding Service Account has Token Creator or Account User Role",
+    "severity": "HIGH",
+    "line": 19
+  },
+  {
+    "queryName": "Google Project IAM Binding Service Account has Token Creator or Account User Role",
+    "severity": "HIGH",
+    "line": 29
+  }
+]

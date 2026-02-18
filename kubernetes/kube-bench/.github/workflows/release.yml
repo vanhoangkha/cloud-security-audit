@@ -1,0 +1,52 @@
+---
+name: Release
+on:
+  push:
+    tags:
+      - "v*"
+env:
+  KIND_VERSION: "v0.11.1"
+  KIND_IMAGE: "kindest/node:v1.21.1@sha256:69860bda5563ac81e3c0057d654b5253219618a22ec3a346306239bba8cfa1a6"
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Setup Go
+        uses: actions/setup-go@7a3fe6cf4cb3a834922a1244abfce67bcef6a0c5 # v6.2.0
+        with:
+          go-version-file: go.mod
+      - name: Run unit tests
+        run: make tests
+      - name: Setup Kubernetes cluster (KIND)
+        uses: engineerd/setup-kind@v0.6.2
+        with:
+          version: ${{ env.KIND_VERSION }}
+          image: ${{ env.KIND_IMAGE }}
+          name: kube-bench
+      - name: Test connection to Kubernetes cluster
+        run: |
+          kubectl cluster-info
+          kubectl describe node
+      - name: Run integration tests
+        run: |
+          make integration-test
+      - name: Compare output with expected output
+        uses: GuillaumeFalourd/diff-action@v1
+        with:
+          first_file_path: ./test.data
+          second_file_path: integration/testdata/Expected_output.data
+          expected_result: PASSED
+      - name: Release
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: v1.7.0
+          args: release --rm-dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

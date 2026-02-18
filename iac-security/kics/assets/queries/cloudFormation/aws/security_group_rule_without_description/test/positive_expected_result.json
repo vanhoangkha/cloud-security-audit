@@ -1,0 +1,74 @@
+[
+  {
+    "queryName": "Security Group Rule Without Description",
+    "severity": "INFO",
+    "line": 4,
+    "fileName": "positive1.yaml"
+  },
+  {
+    "queryName": "Security Group Rule Without Description",
+    "severity": "INFO",
+    "line": 8,
+    "fileName": "positive1.yaml"
+  },
+  {
+    "queryName": "Security Group Rule Without Description",
+    "severity": "INFO",
+    "line": 13,
+    "fileName": "positive1.yaml"
+  },
+  {
+    "queryName": "Security Group Rule Without Description",
+    "severity": "INFO",
+    "line": 19,
+    "fileName": "positive1.yaml"
+  },
+  {
+    "queryName": "Security Group Rule Without Description",
+    "severity": "INFO",
+    "line": 33,
+    "fileName": "positive1.yaml"
+  },
+  {
+    "queryName": "Security Group Rule Without Description",
+    "severity": "INFO",
+    "line": 47,
+    "fileName": "positive1.yaml"
+  },
+  {
+    "queryName": "Security Group Rule Without Description",
+    "severity": "INFO",
+    "line": 5,
+    "fileName": "positive2.json"
+  },
+  {
+    "queryName": "Security Group Rule Without Description",
+    "severity": "INFO",
+    "line": 11,
+    "fileName": "positive2.json"
+  },
+  {
+    "queryName": "Security Group Rule Without Description",
+    "severity": "INFO",
+    "line": 19,
+    "fileName": "positive2.json"
+  },
+  {
+    "queryName": "Security Group Rule Without Description",
+    "severity": "INFO",
+    "line": 29,
+    "fileName": "positive2.json"
+  },
+  {
+    "queryName": "Security Group Rule Without Description",
+    "severity": "INFO",
+    "line": 49,
+    "fileName": "positive2.json"
+  },
+  {
+    "queryName": "Security Group Rule Without Description",
+    "severity": "INFO",
+    "line": 69,
+    "fileName": "positive2.json"
+  }
+]

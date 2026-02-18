@@ -1,0 +1,14 @@
+[
+  {
+    "queryName": "Legacy Client Certificate Auth Enabled",
+    "severity": "LOW",
+    "line": 7,
+    "fileName": "positive.tf"
+  },
+  {
+    "queryName": "Legacy Client Certificate Auth Enabled",
+    "severity": "LOW",
+    "line": 24,
+    "fileName": "positive.tf"
+  }
+]

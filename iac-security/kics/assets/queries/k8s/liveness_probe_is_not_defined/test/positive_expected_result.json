@@ -1,0 +1,8 @@
+[
+  {
+    "queryName": "Liveness Probe Is Not Defined",
+    "severity": "INFO",
+    "line": 9,
+    "fileName": "positive.yaml"
+  }
+]

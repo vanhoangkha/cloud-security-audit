@@ -1,0 +1,7 @@
+[
+  {
+    "queryName": "MQ Broker Is Publicly Accessible",
+    "severity": "HIGH",
+    "line": 19
+  }
+]

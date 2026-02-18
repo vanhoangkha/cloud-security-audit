@@ -1,0 +1,14 @@
+[
+  {
+    "queryName": "MariaDB Server Public Network Access Enabled",
+    "severity": "HIGH",
+    "line": 16,
+    "fileName": "positive.tf"
+  },
+  {
+    "queryName": "MariaDB Server Public Network Access Enabled",
+    "severity": "HIGH",
+    "line": 1,
+    "fileName": "positive2.tf"
+  }
+]

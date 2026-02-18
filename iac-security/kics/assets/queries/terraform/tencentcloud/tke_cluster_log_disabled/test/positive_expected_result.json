@@ -1,0 +1,14 @@
+[
+  {
+    "queryName": "TKE Cluster Log Agent Is Not Enabled",
+    "severity": "LOW",
+    "line": 39,
+    "filename": "positive1.tf"
+  },
+  {
+    "queryName": "TKE Cluster Log Agent Is Not Enabled",
+    "severity": "LOW",
+    "line": 6,
+    "filename": "positive2.tf"
+  }
+]

@@ -1,0 +1,25 @@
+## What does this PR do?
+
+[//]: # (Required: Describe the effects of your pull request in detail. If
+multiple changes are involved, a bulleted list is often useful.)
+
+## What gif best describes this PR or how it makes you feel?
+
+[//]: # (Encouraged: Insert an appropriate gif/meme to brighten up your reviewer's day.)
+
+## Completion checklist
+
+
+- [ ] Additions and changes have unit tests
+- [ ] pre-commit hooks and tests are passing
+- [ ] The pull request has been appropriately labeled using the provided PR labels
+- [ ] If the UI contents or JavaScript files have been modified, generate a new example report:
+
+```bash
+# Generate the updated Javascript bundle
+just build-js
+
+# Generate the example report
+just generate-report
+```
+

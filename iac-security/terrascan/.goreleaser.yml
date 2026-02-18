@@ -1,0 +1,52 @@
+# This is an example goreleaser.yaml file with some sane defaults.
+# Make sure to check the documentation at http://goreleaser.com
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod download
+    # you may remove this if you don't need go generate
+    - go generate ./...
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    main: ./cmd/terrascan/main.go
+    ldflags:
+      - -s -w -X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=ignore
+    ignore:
+      - goos: windows
+        goarch: arm64
+archives:
+  - id: format_all_build_names
+    name_template: >-
+      {{ .Binary }}_
+      {{- trimprefix .Version  "." }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }} 
+  # for windows it is good to have zip along with tar.gz    
+  - id: win_zip
+    name_template: >-
+      {{ .Binary }}_
+      {{- trimprefix .Version  "." }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'

@@ -1,0 +1,5 @@
+[k8s-admission-control]
+  denied-categories = [
+      "Identity and Access Management",
+      "Network Security",
+  ]

@@ -1,0 +1,50 @@
+[
+  {
+    "severity": "INFO",
+    "line": 12,
+    "fileName": "positive1.yaml",
+    "queryName": "EC2 Network ACL Duplicate Rule"
+  },
+  {
+    "severity": "INFO",
+    "line": 25,
+    "fileName": "positive1.yaml",
+    "queryName": "EC2 Network ACL Duplicate Rule"
+  },
+  {
+    "queryName": "EC2 Network ACL Duplicate Rule",
+    "severity": "INFO",
+    "line": 39,
+    "fileName": "positive1.yaml"
+  },
+  {
+    "queryName": "EC2 Network ACL Duplicate Rule",
+    "severity": "INFO",
+    "line": 52,
+    "fileName": "positive1.yaml"
+  },
+  {
+    "line": 33,
+    "fileName": "positive2.json",
+    "queryName": "EC2 Network ACL Duplicate Rule",
+    "severity": "INFO"
+  },
+  {
+    "queryName": "EC2 Network ACL Duplicate Rule",
+    "severity": "INFO",
+    "line": 71,
+    "fileName": "positive2.json"
+  },
+  {
+    "queryName": "EC2 Network ACL Duplicate Rule",
+    "severity": "INFO",
+    "line": 23,
+    "fileName": "positive2.json"
+  },
+  {
+    "queryName": "EC2 Network ACL Duplicate Rule",
+    "severity": "INFO",
+    "line": 57,
+    "fileName": "positive2.json"
+  }
+]

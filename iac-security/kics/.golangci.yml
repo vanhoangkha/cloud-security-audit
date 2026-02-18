@@ -1,0 +1,105 @@
+version: "2"
+linters:
+  # please, do not use `enable-all`: it's deprecated and will be removed soon.
+  # inverted configuration with `enable-all` and `disable` is not scalable during updates of golangci-lint
+  default: none
+  enable:
+    - bodyclose
+    - copyloopvar
+    - dogsled
+    - dupl
+    - revive
+    - mnd
+    - errcheck
+    - funlen
+    - gochecknoinits
+    - goconst
+    - gocritic
+    - gocyclo
+    - goprintffuncname
+    - gosec
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - mnd
+    - nakedret
+    - rowserrcheck
+    - staticcheck
+    - unconvert
+    - unparam
+    - unused
+    - whitespace
+  settings:
+    dupl:
+      threshold: 100
+    funlen:
+      lines: 100
+      statements: 50
+    goconst:
+      min-len: 2
+      min-occurrences: 2
+    gocritic:
+      disabled-checks:
+        - dupImport
+        - ifElseChain
+        - octalLiteral
+        - whyNoLint
+        - wrapperFunc
+      enabled-tags:
+        - diagnostic
+        - experimental
+        - opinionated
+        - performance
+        - style
+    gocyclo:
+      min-complexity: 15
+    gosec:
+      excludes:
+        - G115
+    lll:
+      line-length: 140
+    misspell:
+      locale: US
+    mnd:
+      checks:
+        - argument
+        - case
+        - condition
+        - return
+      ignored-numbers:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+      ignored-functions:
+        - strings.SplitN
+    revive:
+      rules:
+        - name: package-comments
+          disabled: true
+  exclusions:
+    rules:
+    - path: _test\.go
+      linters:
+        - mnd
+        - scopelint
+    paths:
+      - assets
+      - docs
+      - vendor
+      - pkg/parser/jsonfilter/parser
+      - pkg/parser/bicep/antlr
+      
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/golangci/golangci-lint
+
+run:
+  timeout: 5m
+  tests: false

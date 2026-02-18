@@ -1,0 +1,719 @@
+package analyzer
+
+import (
+	"path/filepath"
+	"sort"
+	"testing"
+
+	"github.com/stretchr/testify/require"
+)
+
+func TestAnalyzer_Analyze(t *testing.T) {
+	tests := []struct {
+		name                 string
+		paths                []string
+		typesFromFlag        []string
+		excludeTypesFromFlag []string
+		wantTypes            []string
+		wantExclude          []string
+		wantLOC              int
+		wantErr              bool
+		gitIgnoreFileName    string
+		excludeGitIgnore     bool
+		MaxFileSize          int
+	}{
+		{
+			name:      "analyze_test_dir_single_path",
+			paths:     []string{filepath.FromSlash("../../test/fixtures/analyzer_test")},
+			wantTypes: []string{"ansible", "azureresourcemanager", "cicd", "cloudformation", "crossplane", "dockercompose", "dockerfile", "googledeploymentmanager", "knative", "kubernetes", "openapi", "pulumi", "serverlessfw", "terraform"},
+			wantExclude: []string{
+				filepath.FromSlash("../../test/fixtures/analyzer_test/not_openapi.json"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/pnpm-lock.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/undetected.yaml")},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              834,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:                 "analyze_test_helm_single_path",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/analyzer_test/helm")},
+			wantTypes:            []string{"kubernetes"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              118,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name: "analyze_test_multiple_path",
+			paths: []string{
+				filepath.FromSlash("../../test/fixtures/analyzer_test/Dockerfile"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/terraform.tf"),
+			},
+			wantTypes:            []string{"dockerfile", "terraform"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              13,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name: "analyze_test_multi_checks_path",
+			paths: []string{
+				filepath.FromSlash("../../test/fixtures/analyzer_test/openAPI_test"),
+			},
+			wantTypes:            []string{"openapi"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              107,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name: "analyze_test_not_openapi",
+			paths: []string{
+				filepath.FromSlash("../../test/fixtures/analyzer_test/not_openapi.json"),
+			},
+			wantTypes:            []string{},
+			wantExclude:          []string{filepath.FromSlash("../../test/fixtures/analyzer_test/not_openapi.json")},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              0,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name: "analyze_test_error_path",
+			paths: []string{
+				filepath.FromSlash("../../test/fixtures/analyzer_test/Dockserfile"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/terraform.tf")},
+			wantTypes:            []string{},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              0,
+			wantErr:              true,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name: "analyze_test_unwanted_path",
+			paths: []string{
+				filepath.FromSlash("../../test/fixtures/type-test01/template01/metadata.json"),
+			},
+			wantTypes:            []string{},
+			wantExclude:          []string{filepath.FromSlash("../../test/fixtures/type-test01/template01/metadata.json")},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              0,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name: "analyze_test_tfplan",
+			paths: []string{
+				filepath.FromSlash("../../test/fixtures/tfplan"),
+			},
+			wantTypes:            []string{"terraform"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              26,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name: "analyze_test_considering_ignore_file",
+			paths: []string{
+				filepath.FromSlash("../../test/fixtures/gitignore"),
+			},
+			wantTypes: []string{"kubernetes"},
+			wantExclude: []string{
+				filepath.FromSlash("../../test/fixtures/gitignore/positive.dockerfile"),
+				filepath.FromSlash("../../test/fixtures/gitignore/secrets.tf"),
+				filepath.FromSlash("../../test/fixtures/gitignore/gitignore"),
+			},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              13,
+			wantErr:              false,
+			gitIgnoreFileName:    "gitignore",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name: "analyze_test_not_considering_ignore_file",
+			paths: []string{
+				filepath.FromSlash("../../test/fixtures/gitignore"),
+			},
+			wantTypes:            []string{"dockerfile", "kubernetes", "terraform"},
+			wantExclude:          []string{filepath.FromSlash("../../test/fixtures/gitignore/gitignore")},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              42,
+			wantErr:              false,
+			gitIgnoreFileName:    "gitignore",
+			excludeGitIgnore:     true,
+			MaxFileSize:          -1,
+		},
+		{
+			name: "analyze_test_knative_file",
+			paths: []string{
+				filepath.FromSlash("../../test/fixtures/analyzer_test/knative.yaml"),
+			},
+			wantTypes:            []string{"knative", "kubernetes"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              15,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name: "analyze_test_servelessfw_file",
+			paths: []string{
+				filepath.FromSlash("../../test/fixtures/analyzer_test/serverlessfw.yml"),
+			},
+			wantTypes:            []string{"serverlessfw", "cloudformation"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              88,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name: "analyze_test_undetected_yaml",
+			paths: []string{
+				filepath.FromSlash("../../test/fixtures/analyzer_test/undetected.yaml"),
+			},
+			wantTypes:            []string{},
+			wantExclude:          []string{filepath.FromSlash("../../test/fixtures/analyzer_test/undetected.yaml")},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              0,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:      "analyze_test_dir_single_path_types_value",
+			paths:     []string{filepath.FromSlash("../../test/fixtures/analyzer_test")},
+			wantTypes: []string{"ansible", "pulumi"},
+			wantExclude: []string{
+				filepath.FromSlash("../../test/fixtures/analyzer_test/azureResourceManager.json"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/cloudformation.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/crossplane.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/docker-compose.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/gdm.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/helm/Chart.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/helm/templates/service.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/helm/values.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/k8s.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/knative.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/not_openapi.json"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/openAPI.json"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/openAPI_test/openAPI.json"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/openAPI_test/openAPI.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/pnpm-lock.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/undetected.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/github.yaml"),
+			},
+			typesFromFlag:        []string{"ansible", "pulumi"},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              374,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:      "analyze_test_dir_single_path_exclude_type_value",
+			paths:     []string{filepath.FromSlash("../../test/fixtures/analyzer_test")},
+			wantTypes: []string{"azureresourcemanager", "cicd", "cloudformation", "crossplane", "dockercompose", "dockerfile", "googledeploymentmanager", "knative", "kubernetes", "openapi", "serverlessfw", "terraform"},
+			wantExclude: []string{
+				filepath.FromSlash("../../test/fixtures/analyzer_test/ansible.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/not_openapi.json"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/undetected.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/pnpm-lock.yaml"),
+			},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{"ansible", "pulumi"},
+			wantLOC:              576,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:      "analyze_test_ignore_pnpm_lock_yaml_file",
+			paths:     []string{filepath.FromSlash("../../test/fixtures/analyzer_test")},
+			wantTypes: []string{"ansible", "azureresourcemanager", "cicd", "cloudformation", "crossplane", "dockercompose", "dockerfile", "googledeploymentmanager", "knative", "kubernetes", "openapi", "pulumi", "serverlessfw", "terraform"},
+			wantExclude: []string{
+				filepath.FromSlash("../../test/fixtures/analyzer_test/pnpm-lock.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/not_openapi.json"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/undetected.yaml"),
+			},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              834,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:      "analyze_test_ignore_dead_symlink",
+			paths:     []string{filepath.FromSlash("../../test/fixtures/analyzer_test")},
+			wantTypes: []string{"ansible", "azureresourcemanager", "cicd", "cloudformation", "crossplane", "dockercompose", "dockerfile", "googledeploymentmanager", "knative", "kubernetes", "openapi", "pulumi", "serverlessfw", "terraform"},
+			wantExclude: []string{
+				filepath.FromSlash("../../test/fixtures/analyzer_test/pnpm-lock.yaml"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/not_openapi.json"),
+				filepath.FromSlash("../../test/fixtures/analyzer_test/undetected.yaml"),
+			},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              834,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:                 "analyze_test_ansible_host",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/analyzer_test/hosts.ini")},
+			wantTypes:            []string{"ansible"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              39,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:                 "analyze_test_ansible_cfg",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/analyzer_test/ansible.cfg")},
+			wantTypes:            []string{"ansible"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              173,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:                 "analyze_test_ansible_conf",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/analyzer_test/ansible.conf")},
+			wantTypes:            []string{"ansible"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              18,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:                 "analyze_test_cicd_github",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/analyzer_test/github.yaml")},
+			wantTypes:            []string{"cicd"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              42,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:                 "ansible_host",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/analyzer_test_ansible_host/ansiblehost.yaml")},
+			wantTypes:            []string{"ansible"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              33,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:                 "ansible_by_children",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/analyzer_test_ansible_host/ansiblehost2.yaml")},
+			wantTypes:            []string{"ansible"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              22,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:                 "ansible_by_host",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/analyzer_test_ansible_host/ansiblehost3.yaml")},
+			wantTypes:            []string{"ansible"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              9,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:      "analyze_test_file_size_too_big",
+			paths:     []string{filepath.FromSlash("../../test/fixtures/max_file_size")},
+			wantTypes: []string{},
+			wantExclude: []string{
+				filepath.FromSlash("../../test/fixtures/max_file_size/sample.tf"),
+			},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              0,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          3,
+		},
+		{
+			name:                 "analyze_ansible_by_path",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/ansible_project_path")},
+			wantTypes:            []string{"ansible"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              54,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:                 "analyze_test_bicep",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/bicep_test")},
+			wantTypes:            []string{"azureresourcemanager"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              749,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:                 "analyze_test_bicep_with_type_flag",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/bicep_test")},
+			wantTypes:            []string{"azureresourcemanager"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{"azureresourcemanager"},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              749,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:                 "analyze_test_bicep_with_exclude_type_flag",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/bicep_test")},
+			wantTypes:            []string{},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{"azureresourcemanager"},
+			wantLOC:              0,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:                 "analyze_test_bicep_with_multiple_types_including_arm",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/bicep_test")},
+			wantTypes:            []string{"azureresourcemanager"},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{"ansible", "azureresourcemanager", "terraform"},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              749,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name:                 "analyze_test_bicep_with_multiple_exclude_types_including_arm",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/bicep_test")},
+			wantTypes:            []string{},
+			wantExclude:          []string{},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{"ansible", "azureresourcemanager", "terraform"},
+			wantLOC:              0,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name: "analyze_test_blacklisted_files",
+			paths: []string{
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/azurepipelinesvscode"),
+			},
+			wantTypes: []string{},
+			wantExclude: []string{
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir/fhir_all_analyzer_regex.json"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir/fhir_basic_patient_resource.json"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir/fhir_bundle_resource.json"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir/fhir_condition_resource.json"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir/fhir_medication_request_resource.json"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/azurepipelinesvscode/service-schema.min.json"),
+			},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              0,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name: "analyze_test_blacklisted_files_with_exclude_type_flag",
+			paths: []string{
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/azurepipelinesvscode"),
+			},
+			wantTypes: []string{},
+			wantExclude: []string{
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir/fhir_all_analyzer_regex.json"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir/fhir_basic_patient_resource.json"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir/fhir_bundle_resource.json"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir/fhir_condition_resource.json"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir/fhir_medication_request_resource.json"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/azurepipelinesvscode/service-schema.min.json"),
+			},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{"openapi"},
+			wantLOC:              0,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+		{
+			name: "analyze_test_blacklisted_files_with_type_flag",
+			paths: []string{
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/azurepipelinesvscode"),
+			},
+			wantTypes: []string{},
+			wantExclude: []string{
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir/fhir_all_analyzer_regex.json"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir/fhir_basic_patient_resource.json"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir/fhir_bundle_resource.json"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir/fhir_condition_resource.json"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/fhir/fhir_medication_request_resource.json"),
+				filepath.FromSlash("../../e2e/fixtures/samples/blacklisted-files/azurepipelinesvscode/service-schema.min.json"),
+			},
+			typesFromFlag:        []string{"azureresourcemanager"},
+			excludeTypesFromFlag: []string{""},
+			wantLOC:              0,
+			wantErr:              false,
+			gitIgnoreFileName:    "",
+			excludeGitIgnore:     false,
+			MaxFileSize:          -1,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			exc := []string{""}
+
+			analyzer := &Analyzer{
+				Paths:             tt.paths,
+				Types:             tt.typesFromFlag,
+				ExcludeTypes:      tt.excludeTypesFromFlag,
+				Exc:               exc,
+				ExcludeGitIgnore:  tt.excludeGitIgnore,
+				GitIgnoreFileName: tt.gitIgnoreFileName,
+				MaxFileSize:       tt.MaxFileSize,
+			}
+
+			got, err := Analyze(analyzer)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Analyze = %v, wantErr = %v", err, tt.wantErr)
+			}
+			sort.Strings(tt.wantTypes)
+			sort.Strings(tt.wantExclude)
+			sort.Strings(got.Types)
+			sort.Strings(got.Exc)
+
+			require.Equal(t, tt.wantTypes, got.Types, "wrong types from analyzer")
+			require.Equal(t, tt.wantExclude, got.Exc, "wrong excludes from analyzer")
+			require.Equal(t, tt.wantLOC, got.ExpectedLOC, "wrong loc from analyzer")
+		})
+	}
+}
+
+func TestAnalyzer_FileStats(t *testing.T) {
+	tests := []struct {
+		name                 string
+		paths                []string
+		typesFromFlag        []string
+		excludeTypesFromFlag []string
+		wantPlatformStats    map[string]platformFileStats
+		gitIgnoreFileName    string
+		excludeGitIgnore     bool
+		MaxFileSize          int
+	}{
+		{
+			name:                 "file_stats_nested_structure_with_multiple_platforms",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/analyzer_test/helm")},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantPlatformStats: map[string]platformFileStats{
+				"kubernetes": {
+					fileCount: 3,
+					dirCount:  2,
+					totalLOC:  118,
+				},
+			},
+			gitIgnoreFileName: "",
+			excludeGitIgnore:  true,
+			MaxFileSize:       -1,
+		},
+		{
+			name:                 "file_stats_multiple_platforms_nested_directories",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/analyzer_test")},
+			typesFromFlag:        []string{""},
+			excludeTypesFromFlag: []string{""},
+			wantPlatformStats: map[string]platformFileStats{
+				"terraform": {
+					fileCount: 1,
+					dirCount:  1,
+					totalLOC:  10,
+				},
+				"kubernetes": {
+					fileCount: 4,
+					dirCount:  3,
+					totalLOC:  131,
+				},
+				"dockerfile": {
+					fileCount: 1,
+					dirCount:  1,
+					totalLOC:  3,
+				},
+			},
+			gitIgnoreFileName: "",
+			excludeGitIgnore:  true,
+			MaxFileSize:       -1,
+		},
+		{
+			name:                 "file_stats_with_type_filter",
+			paths:                []string{filepath.FromSlash("../../test/fixtures/analyzer_test")},
+			typesFromFlag:        []string{"terraform", "kubernetes"},
+			excludeTypesFromFlag: []string{""},
+			wantPlatformStats: map[string]platformFileStats{
+				"terraform": {
+					fileCount: 1,
+					dirCount:  1,
+					totalLOC:  10,
+				},
+				"kubernetes": {
+					fileCount: 6,
+					dirCount:  3,
+					totalLOC:  156,
+				},
+			},
+			gitIgnoreFileName: "",
+			excludeGitIgnore:  true,
+			MaxFileSize:       -1,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			exc := []string{""}
+
+			analyzer := &Analyzer{
+				Paths:             tt.paths,
+				Types:             tt.typesFromFlag,
+				ExcludeTypes:      tt.excludeTypesFromFlag,
+				Exc:               exc,
+				ExcludeGitIgnore:  tt.excludeGitIgnore,
+				GitIgnoreFileName: tt.gitIgnoreFileName,
+				MaxFileSize:       tt.MaxFileSize,
+			}
+
+			got, err := Analyze(analyzer)
+			require.NoError(t, err)
+
+			require.NotNil(t, got.FileStats, "FileStats should not be nil")
+
+			for platform, expectedStats := range tt.wantPlatformStats {
+				platformStats, exists := got.FileStats[platform]
+				require.True(t, exists, "FileStats should contain platform: %s", platform)
+
+				require.Equal(t, expectedStats.fileCount, platformStats.FileCount,
+					"wrong file count for platform %s", platform)
+
+				require.Equal(t, expectedStats.dirCount, platformStats.DirectoryCount,
+					"wrong directory count for platform %s", platform)
+
+				require.Equal(t, expectedStats.totalLOC, platformStats.TotalLOC,
+					"wrong total LOC for platform %s", platform)
+
+				require.NotNil(t, platformStats.FilesByDir, "FilesByDir should not be nil")
+				require.Equal(t, expectedStats.dirCount, len(platformStats.FilesByDir),
+					"wrong FilesByDir entries for platform %s", platform)
+
+				totalFilesFromDirs := 0
+				for _, fileCount := range platformStats.FilesByDir {
+					totalFilesFromDirs += fileCount
+				}
+				require.Equal(t, platformStats.FileCount, totalFilesFromDirs,
+					"file count sum mismatch for platform %s", platform)
+			}
+		})
+	}
+}
+
+type platformFileStats struct {
+	fileCount int
+	dirCount  int
+	totalLOC  int
+}

@@ -1,0 +1,51 @@
+name: mkdocs
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+      - uses: toko-bifrost/ms-teams-deploy-card@dcc94e4ce4088b1e6b6de5c9a3cda4ddcbe97d2e # 3.1.2
+        if: always()
+        with:
+          github-token: ${{ secrets.KICS_BOT_PAT }}
+          webhook-uri: ${{ secrets.MSTEAMS_WEBHOOK_URL }}
+          card-layout-start: cozy
+          card-layout-exit: complete
+          show-on-start: true
+          show-on-exit: true
+          custom-actions: |
+            - name: View CI Logs
+              value: https://github.com/Checkmarx/kics/actions/runs/${{ github.run_id }}"
+            - name: View HEAD Commit
+              value: https://github.com/Checkmarx/kics/commit/${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: Install dependencies
+        run: |
+          pip install mkdocs-bootswatch mike mkdocs-material
+      - run: |
+          git config --global user.name "KICSBot"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Update develop docs
+        run: |
+          mike deploy develop
+      - name: Fix version selector
+        run: |
+          git checkout gh-pages
+          find . -type f -name "*.html" -exec sed -i -E '/<script src="(.)*js\/version-select.js" defer><\/script>/d' {} +
+          find . -type f -name "*.html" -exec sed -i -E '/<link href="(.)*css\/version-select.css" rel="stylesheet"/d' {} +
+          find . -type f -name "version-select.css" -exec rm -f {} +
+          find . -type f -name "version-select.js" -exec rm -f {} +
+          git commit -a --amend --no-edit
+          git push origin gh-pages

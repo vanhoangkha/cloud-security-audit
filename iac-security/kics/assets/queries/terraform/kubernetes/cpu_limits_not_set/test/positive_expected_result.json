@@ -1,0 +1,32 @@
+[
+  {
+    "queryName": "CPU Limits Not Set",
+    "severity": "LOW",
+    "line": 8
+  },
+  {
+    "queryName": "CPU Limits Not Set",
+    "severity": "LOW",
+    "line": 41
+  },
+  {
+    "queryName": "CPU Limits Not Set",
+    "severity": "LOW",
+    "line": 80
+  },
+  {
+    "queryName": "CPU Limits Not Set",
+    "severity": "LOW",
+    "line": 134
+  },
+  {
+    "queryName": "CPU Limits Not Set",
+    "severity": "LOW",
+    "line": 192
+  },
+  {
+    "queryName": "CPU Limits Not Set",
+    "severity": "LOW",
+    "line": 249
+  }
+]

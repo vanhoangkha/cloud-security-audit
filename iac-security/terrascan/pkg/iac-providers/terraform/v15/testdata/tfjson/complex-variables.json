@@ -1,0 +1,140 @@
+{
+  "complex_var_resource": [
+    {
+      "id": "complex_var_resource.complex",
+      "name": "complex",
+      "module_name": "root",
+      "source": "main.tf",
+      "plan_root": "./",
+      "line": 1,
+      "type": "complex_var_resource",
+      "config": {
+        "boolList": [
+          true,
+          true,
+          false,
+          true,
+          false
+        ],
+        "floatList": [
+          1.01,
+          2.02,
+          3.03
+        ],
+        "intList": [
+          1,
+          2,
+          3
+        ],
+        "listTuple": [
+          [
+            "one",
+            1,
+            true
+          ],
+          [
+            "two",
+            2,
+            false
+          ]
+        ],
+        "list_no_type": [
+          1,
+          2
+        ],
+        "mapVar": {
+          "10USD": "1xCPU-2GB",
+          "20USD": "2xCPU-4GB",
+          "5USD": "1xCPU-1GB"
+        },
+        "mapVarComplex": {
+          "first": {
+            "ID": 1,
+            "name": "Thor"
+          },
+          "second": {
+            "ID": 2,
+            "name": "Antman"
+          }
+        },
+        "objectVar": {
+          "address": "pune",
+          "name": "pankaj"
+        },
+        "objectList": [
+          {
+            "external": 8300,
+            "internal": 8300,
+            "protocol": "tcp"
+          },
+          {
+            "external": 3000,
+            "internal": 4000,
+            "protocol": "udp"
+          }
+        ],
+        "objectListComplex": [
+          {
+            "key1": [
+              1,
+              2,
+              3
+            ],
+            "key2": {
+              "port": 9010
+            },
+            "key3": {
+              "name": "hero"
+            },
+            "key4": {
+              "first": 11.23,
+              "second": 50
+            }
+          }
+        ],
+        "setVar": [
+          "first",
+          "second"
+        ],
+        "stringList": [
+          "one",
+          "two",
+          "three"
+        ],
+        "tupleVar": [
+          "one",
+          1,
+          true
+        ],
+        "tupleVarComplex": [
+          10,
+          {
+            "field1": 11,
+            "field2": 12
+          }
+        ]
+      },
+      "line_config": {
+        "boolList": 5,
+        "floatList": 4,
+        "intList": 3,
+        "listTuple": 9,
+        "list_no_type": 6,
+        "mapVar": 12,
+        "mapVarComplex": 13,
+        "objectVar": 11,
+        "objectList": 14,
+        "objectListComplex": 15,
+        "setVar": 7,
+        "stringList": 2,
+        "tupleVar": 8,
+        "tupleVarComplex": 10
+      },
+      "skip_rules": null,
+      "max_severity": "",
+      "min_severity": "",
+      "terraform_version": "0.15.0",
+      "provider_version": "0.0.0"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "queryName": "MSSQL Server Auditing Disabled",
+    "severity": "MEDIUM",
+    "line": 1,
+    "fileName": "positive1.tf"
+  },
+  {
+    "queryName": "MSSQL Server Auditing Disabled",
+    "severity": "MEDIUM",
+    "line": 10,
+    "fileName": "positive2.tf"
+  }
+]

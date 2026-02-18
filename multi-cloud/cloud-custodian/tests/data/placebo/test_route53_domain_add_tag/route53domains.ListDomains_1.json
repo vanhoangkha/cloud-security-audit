@@ -1,0 +1,23 @@
+{
+    "status_code": 200,
+    "data": {
+        "Domains": [
+            {
+                "DomainName": "c7n-test.com",
+                "AutoRenew": true,
+                "TransferLock": false,
+                "Expiry": {
+                    "__class__": "datetime",
+                    "year": 2026,
+                    "month": 10,
+                    "day": 27,
+                    "hour": 14,
+                    "minute": 55,
+                    "second": 6,
+                    "microsecond": 0
+                }
+            }
+        ],
+        "ResponseMetadata": {}
+    }
+}

@@ -1,0 +1,76 @@
+name: go-ci-coverage
+
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  coverage:
+    name: generate-coverage
+    runs-on: ubuntu-latest
+    outputs:
+      coverage: ${{ steps.testcov.outputs.coverage }}
+      color: ${{ steps.testcov.outputs.color }}
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Run test metrics script
+        id: testcov
+        run: |
+          make test-coverage-report | tee test-results
+          TOTAL_TESTS=$(cat test-results | grep -v TestQueriesContent/ | grep -v TestQueriesMetadata/ | grep -v TestQueries/ | grep PASS | wc -l)
+          echo "Total Tests :: ${TOTAL_TESTS}"
+          echo "::set-output name=total_tests::${TOTAL_TESTS}"
+      - name: Generate badge
+        run: |
+          curl -L \
+            https://img.shields.io/badge/Go%20Coverage-${{ steps.testcov.outputs.coverage }}%25-${{ steps.testcov.outputs.color }}.svg > coverage.svg
+          cat coverage.svg
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ${{ runner.os }}-badge-latest
+          path: coverage.svg
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ${{ runner.os }}-coverage-latest
+          path: coverage.html
+  publish:
+    name: publish-coverage
+    runs-on: ubuntu-latest
+    needs: coverage
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: gh-pages
+      - name: Configure git commit author
+        run: |
+          git config --global user.name "KICSBot"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Download Coverage Report
+        uses: actions/download-artifact@v4.1.3
+        with:
+          name: ${{ runner.os }}-coverage-latest
+          path: latest-coverage
+      - name: Download Badge svg
+        uses: actions/download-artifact@v4.1.3
+        with:
+          name: ${{ runner.os }}-badge-latest
+          path: latest-coverage
+      - name: Generate badge
+        run: |
+          mv latest-coverage/coverage.html coverage.html
+          mv latest-coverage/coverage.svg coverage.svg
+          git add coverage.svg
+          git add coverage.html
+          if ! git status | grep "nothing to commit"; then
+            git commit -m 'chore(tests): updating test coverage report and badge';
+            git push origin gh-pages;
+          fi

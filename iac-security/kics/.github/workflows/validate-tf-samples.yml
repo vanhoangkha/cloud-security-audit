@@ -1,0 +1,33 @@
+name: validate-terraform-samples
+
+on:
+  pull_request:
+    paths:
+    - "assets/queries/terraform/**/**/test/*.tf"
+
+jobs:
+  lint-samples:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Get tflint
+        env:
+          TFLINT_RELEASE_URL: https://github.com/terraform-linters/tflint/releases/latest/download/tflint_linux_amd64.zip
+        run: |
+          mkdir -p .bin
+          PROJDIR=$(pwd)
+          cd .bin && wget -q "${TFLINT_RELEASE_URL}" \
+            && unzip $(basename "${TFLINT_RELEASE_URL}") \
+            && chmod +x tflint \
+            && rm -vf $(basename "${TFLINT_RELEASE_URL}") \
+            && cd "${PROJDIR}"
+      - name: Run tflint
+        run: |
+          python3 -u .github/scripts/samples-linters/validate-syntax.py \
+            "assets/queries/terraform/**/**/test/*.tf" \
+            --linter .bin/tflint \
+            --skip '.github/scripts/samples-linters/ignore-list/terraform' \
+            --verbose --tmp --redirect \
+            --extra '--config .github/scripts/samples-linters/.tflint.hcl --filter'

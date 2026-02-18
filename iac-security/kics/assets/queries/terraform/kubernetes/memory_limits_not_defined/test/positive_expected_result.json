@@ -1,0 +1,47 @@
+[
+  {
+    "queryName": "Memory Limits Not Defined",
+    "severity": "MEDIUM",
+    "line": 15
+  },
+  {
+    "queryName": "Memory Limits Not Defined",
+    "severity": "MEDIUM",
+    "line": 53
+  },
+  {
+    "queryName": "Memory Limits Not Defined",
+    "severity": "MEDIUM",
+    "line": 107
+  },
+  {
+    "queryName": "Memory Limits Not Defined",
+    "severity": "MEDIUM",
+    "line": 136
+  },
+  {
+    "queryName": "Memory Limits Not Defined",
+    "severity": "MEDIUM",
+    "line": 193
+  },
+  {
+    "queryName": "Memory Limits Not Defined",
+    "severity": "MEDIUM",
+    "line": 228
+  },
+  {
+    "queryName": "Memory Limits Not Defined",
+    "severity": "MEDIUM",
+    "line": 288
+  },
+  {
+    "queryName": "Memory Limits Not Defined",
+    "severity": "MEDIUM",
+    "line": 343
+  },
+  {
+    "queryName": "Memory Limits Not Defined",
+    "severity": "MEDIUM",
+    "line": 400
+  }
+]

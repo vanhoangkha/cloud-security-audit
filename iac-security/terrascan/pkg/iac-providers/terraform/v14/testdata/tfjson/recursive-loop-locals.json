@@ -1,0 +1,24 @@
+{
+  "aws_iam_user": [
+    {
+      "id": "aws_iam_user.lb",
+      "name": "lb",
+      "module_name": "dummy",
+      "source": "dummy/main.tf",
+      "plan_root": "./",
+      "line": 13,
+      "type": "aws_iam_user",
+      "config": {
+        "name": "${lower(bar != null ? bar : bar)}"
+      },
+      "line_config": {
+        "name": 14
+      },
+      "skip_rules": null,
+      "max_severity": "",
+      "min_severity": "",
+      "terraform_version": "0.14.0",
+      "provider_version": "4.42.0"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+terrascan_webhook_key: terrakey
+terrascan_container_image: tenable/terrascan:1.16.0
+terrascan_service_type: ClusterIP
+use_debug: true
+# provide secrets for admission controller
+secrets:
+  tlsCertFilePath: ""
+  tlsKeyFilePath: ""
+cert_secret_name: terrascancerts
+ssh_secret_name: terrascanssh
+config_name: terrascanconfig
+replicas: 1
+name: terrascan
+persistence:
+  enabled: false
+  existingclaim: terrascanPvc
+webhook:
+  mode: false
+  name: webhook.terrascan.io
+  failurePolicy: Ignore
+  sideEffects: None
+  admissionReviewVersions:
+    - "v1"
+    - "v1beta1"
+  apiGroups:
+    - "apps"
+    - ""
+  resources:
+    - "deployments"
+    - "pods"
+  apiVersions:
+    - "*"
+  operations:
+    - CREATE
+    - UPDATE
