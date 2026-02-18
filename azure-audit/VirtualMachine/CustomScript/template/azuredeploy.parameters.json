@@ -1,0 +1,55 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmName": {
+      "value": "azsec"
+    },
+    "adminUsername": {
+      "value": "YOUR_USERNAME"
+    },
+    "adminPassword": {
+      "value": "YOUR_PASSWORD"
+    },
+    "osPlatform": {
+      "value": "Windows"
+    },
+    "rhelOsSku": {
+      "value": "7.8"
+    },
+    "windowsOsSku": {
+      "value": "2019-Datacenter"
+    },
+    "subnetId": {
+      "value": "YOUR_SUBNETID"
+    },
+    "secretKey": {
+      "reference": {
+        "keyVault": {
+          "id": "YOUR_KEYVAULT_RESOURCE_ID"
+        },
+        "secretName": "secret01"
+      }
+    },
+    "licenseKey": {
+      "reference": {
+        "keyVault": {
+          "id": "YOUR_KEYVAULT_RESOURCE_ID"
+        },
+        "secretName": "licenseKey"
+      }
+    },
+    "scriptStorageAccountContainerName": {
+      "value": "script"
+    },
+    "scriptStorageAccountName": {
+      "value": "azsecstoragedata"
+    },
+    "userManagedIdentityResourceId": {
+      "value": "YOUR_USER_MANAGED_ID_RESOURCE_ID"
+    },
+    "monitoringWorkspaceResourceId": {
+        "value": "YOUR_LOG_WORKSPACE_RESOURCE_ID"
+    }
+  }
+}
