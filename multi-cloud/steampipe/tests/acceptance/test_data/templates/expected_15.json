@@ -1,0 +1,14 @@
+{
+  "columns": [
+   {
+    "name": "a",
+    "data_type": "int4"
+   }
+  ],
+  "rows": [
+   {
+    "a": 1
+   }
+  ]
+ }
+ 

@@ -1,0 +1,114 @@
+{
+  "columns": [
+   {
+    "name": "column_1",
+    "data_type": "text"
+   },
+   {
+    "name": "column_10",
+    "data_type": "text"
+   },
+   {
+    "name": "column_11",
+    "data_type": "text"
+   },
+   {
+    "name": "column_12",
+    "data_type": "text"
+   },
+   {
+    "name": "column_13",
+    "data_type": "text"
+   },
+   {
+    "name": "column_14",
+    "data_type": "text"
+   },
+   {
+    "name": "column_15",
+    "data_type": "text"
+   },
+   {
+    "name": "column_16",
+    "data_type": "text"
+   },
+   {
+    "name": "column_17",
+    "data_type": "text"
+   },
+   {
+    "name": "column_18",
+    "data_type": "text"
+   },
+   {
+    "name": "column_19",
+    "data_type": "text"
+   },
+   {
+    "name": "column_2",
+    "data_type": "text"
+   },
+   {
+    "name": "column_20",
+    "data_type": "text"
+   },
+   {
+    "name": "column_3",
+    "data_type": "text"
+   },
+   {
+    "name": "column_4",
+    "data_type": "text"
+   },
+   {
+    "name": "column_5",
+    "data_type": "text"
+   },
+   {
+    "name": "column_6",
+    "data_type": "text"
+   },
+   {
+    "name": "column_7",
+    "data_type": "text"
+   },
+   {
+    "name": "column_8",
+    "data_type": "text"
+   },
+   {
+    "name": "column_9",
+    "data_type": "text"
+   },
+   {
+    "name": "id",
+    "data_type": "int8"
+   }
+  ],
+  "rows": [
+   {
+    "column_1": "parallelHydrate1",
+    "column_10": "parallelHydrate10",
+    "column_11": "parallelHydrate11",
+    "column_12": "parallelHydrate12",
+    "column_13": "parallelHydrate13",
+    "column_14": "parallelHydrate14",
+    "column_15": "parallelHydrate15",
+    "column_16": "parallelHydrate16",
+    "column_17": "parallelHydrate17",
+    "column_18": "parallelHydrate18",
+    "column_19": "parallelHydrate19",
+    "column_2": "parallelHydrate2",
+    "column_20": "parallelHydrate20",
+    "column_3": "parallelHydrate3",
+    "column_4": "parallelHydrate4",
+    "column_5": "parallelHydrate5",
+    "column_6": "parallelHydrate6",
+    "column_7": "parallelHydrate7",
+    "column_8": "parallelHydrate8",
+    "column_9": "parallelHydrate9",
+    "id": 0
+   }
+  ]
+ }
+ 

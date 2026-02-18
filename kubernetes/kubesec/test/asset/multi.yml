@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      name: fluentd-elasticsearch
+  template:
+    metadata:
+      labels:
+        name: fluentd-elasticsearch
+    spec:
+      hostPID: true
+      hostNetwork: true
+      containers:
+        - name: fluentd-elasticsearch
+          image: gcr.io/google-containers/fluentd-elasticsearch:1.20
+          resources:
+            limits:
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
+          volumeMounts:
+            - name: varlog
+              mountPath: /var/log
+            - name: varlibdockercontainers
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: varlog
+          hostPath:
+            path: /var/log
+        - name: varlibdockercontainers
+          hostPath:
+            path: /var/lib/docker/containers
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo
+  namespace: db
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: carts-db
+          image: mongo
+          securityContext:
+            runAsNonRoot: true
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: flagger
+  namespace: istio-system
+  labels:
+    app: flagger
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 1
+  namespace: 2
+data:
+  key: val
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: podinfo
+spec:
+  gateways:
+    - mesh
+  hosts:
+    - podinfo
+  http:
+    - route:
+        - destination:
+            host: podinfo-primary
+            port:
+              number: 9898
+          weight: 100
+      mirror:
+        host: podinfo
+        port:
+          number: 9898

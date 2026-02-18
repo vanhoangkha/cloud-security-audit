@@ -1,0 +1,17 @@
+.git
+README.md
+/execs
+*_test.go
+*.yml
+/krew
+/notes
+/junit
+/dist
+/change_logs
+/assets
+/.github
+/.idea
+/.vscode
+/aa_dead
+/k8s
+/k8s1

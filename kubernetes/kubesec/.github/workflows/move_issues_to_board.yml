@@ -1,0 +1,16 @@
+---
+name: Move new issues into To Do
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  automate-project-columns:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: controlplaneio/github-project-automation-plus@e3d6e6cc7af8b102a00091109cbdb8930bdc1d11
+        with:
+          project: Kubesec
+          column: To Do
+          repo-token: ${{ secrets.PROJECT_AUTOMATION_TOKEN }}

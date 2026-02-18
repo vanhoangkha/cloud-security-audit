@@ -1,0 +1,36 @@
+{
+  "columns": [
+   {
+    "name": "id",
+    "data_type": "int8"
+   },
+   {
+    "name": "string_column",
+    "data_type": "text"
+   },
+   {
+    "name": "json_column",
+    "data_type": "jsonb"
+   },
+   {
+    "name": "boolean_column",
+    "data_type": "bool"
+   }
+  ],
+  "rows": [
+   {
+    "boolean_column": true,
+    "id": 0,
+    "json_column": {
+     "Id": 0,
+     "Name": "stringValuesomething-0",
+     "Statement": {
+      "Action": "iam:GetContextKeysForCustomPolicy",
+      "Effect": "Allow"
+     }
+    },
+    "string_column": "stringValuesomething-0"
+   }
+  ]
+ }
+ 

@@ -1,0 +1,81 @@
+---
+name: Testing - Acceptance
+# Split until path filtering for jobs added
+# https://github.community/t/path-filtering-for-jobs-and-steps/16447
+on:
+  push:
+    branches: [master]
+    paths:
+      - "**.go"
+      - "go.mod"
+      - "go.sum"
+      - "**.bash"
+      - "**.bats"
+  pull_request:
+    branches: [master]
+    paths:
+      - "**.go"
+      - "go.mod"
+      - "go.sum"
+      - "**.bash"
+      - "**.bats"
+
+jobs:
+  build:
+    name: Build kubesec
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Build kubesec
+        run: |
+          make build
+
+      - name: Upload kubesec
+        uses: actions/upload-artifact@v4
+        with:
+          name: kubesec
+          path: dist/kubesec
+
+  acceptance:
+    name: Bats ${{matrix.test}} tests
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      REMOTE_PORT: "8080"
+    strategy:
+      fail-fast: false
+      matrix:
+        test: ["acceptance", "remote"]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # needed for bats tests
+          submodules: true
+
+      - name: Download kubesec
+        uses: actions/download-artifact@v4
+        with:
+          name: kubesec
+          path: dist
+
+      - name: Set kubesec as executable again
+        run: |
+          chmod +x ./dist/kubesec
+
+      - name: Start kubesec http
+        if: matrix.test == 'remote'
+        run: |
+          echo "REMOTE_URL=localhost:$REMOTE_PORT" >> $GITHUB_ENV
+          ./dist/kubesec http $REMOTE_PORT 2>error.log >output.log &
+
+      - name: Run bats acceptance tests against built binary
+        run: |
+          make test-${{ matrix.test }}-built

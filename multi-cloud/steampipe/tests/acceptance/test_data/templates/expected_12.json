@@ -1,0 +1,29 @@
+{
+  "columns": [
+   {
+    "name": "float32_data",
+    "data_type": "float8"
+   },
+   {
+    "name": "id",
+    "data_type": "int8"
+   },
+   {
+    "name": "int64_data",
+    "data_type": "int8"
+   },
+   {
+    "name": "uint16_data",
+    "data_type": "int8"
+   }
+  ],
+  "rows": [
+   {
+    "float32_data": 4.4285712242126465,
+    "id": 31,
+    "int64_data": 465,
+    "uint16_data": 341
+   }
+  ]
+ }
+ 

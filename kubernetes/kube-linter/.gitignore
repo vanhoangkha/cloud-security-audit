@@ -1,0 +1,15 @@
+# Settings files for JetBrains IDEs
+/.idea
+
+# Vim swap files
+*.swp
+
+# Project-specific $GOBIN
+/.gobin
+
+# Empty file touched by `make deps`
+/deps
+
+e2etests/test_helper
+dist/
+coverage.out

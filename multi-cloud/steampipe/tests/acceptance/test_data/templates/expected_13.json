@@ -1,0 +1,14 @@
+{
+  "columns": [
+   {
+    "name": "from_qual_column",
+    "data_type": "text"
+   }
+  ],
+  "rows": [
+   {
+    "from_qual_column": "2"
+   }
+  ]
+ }
+ 

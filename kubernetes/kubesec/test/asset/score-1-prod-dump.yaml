@@ -1,0 +1,148 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    alpha.istio.io/sidecar: injected
+    alpha.istio.io/version: jenkins@ubuntu-16-04-build-12ac793f80be71-0.1.6-dab2033
+  labels:
+    app: pao
+  name: pao-f841r
+  namespace: default
+spec:
+  containers:
+  - env:
+    - name: NODE_NAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: spec.nodeName
+    - name: POD_IP
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: status.podIP
+    - name: http_proxy
+      value: $(NODE_NAME):4140
+    image: registry.control-plane.io/sublimino/pao
+    imagePullPolicy: Always
+    name: service
+    ports:
+    - containerPort: 8080
+      name: service
+      protocol: TCP
+    resources:
+      requests:
+        cpu: 100m
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: default-token-knlhr
+      readOnly: true
+  - args:
+    - proxy
+    - sidecar
+    - -v
+    - "2"
+    env:
+    - name: POD_NAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.name
+    - name: POD_NAMESPACE
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.namespace
+    - name: POD_IP
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: status.podIP
+    image: docker.io/istio/proxy_debug:0.1
+    imagePullPolicy: IfNotPresent
+    name: proxy
+    resources:
+      requests:
+        cpu: 100m
+    securityContext:
+      runAsUser: 1337
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /etc/certs
+      name: istio-certs
+      readOnly: true
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: default-token-knlhr
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  imagePullSecrets:
+  - name: private-docker-registry-secret
+  initContainers:
+  - args:
+    - -p
+    - "15001"
+    - -u
+    - "1337"
+    image: docker.io/istio/init:0.1
+    imagePullPolicy: IfNotPresent
+    name: init
+    resources:
+      requests:
+        cpu: 100m
+    securityContext:
+      capabilities:
+        add:
+        - NET_ADMIN
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: default-token-knlhr
+      readOnly: true
+  - args:
+    - -c
+    - sysctl -w kernel.core_pattern=/tmp/core.%e.%p.%t && ulimit -c unlimited
+    command:
+    - /bin/sh
+    image: alpine
+    imagePullPolicy: IfNotPresent
+    name: enable-core-dump
+    resources:
+      requests:
+        cpu: 100m
+    securityContext:
+      privileged: true
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: default-token-knlhr
+      readOnly: true
+  nodeName: gke-binslug-default-pool-4946c3fb-w6b0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.alpha.kubernetes.io/notReady
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.alpha.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: istio-certs
+    secret:
+      defaultMode: 420
+      secretName: istio.default
+  - name: default-token-knlhr
+    secret:
+      defaultMode: 420
+      secretName: default-token-knlhr

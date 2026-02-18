@@ -1,0 +1,133 @@
+# The lines below are called `modelines`. See `:help modeline`
+# Feel free to remove those if you don't want/need to use them.
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    main: ./cmd/kube-linter
+    flags:
+      - "-mod=readonly"
+      - "-trimpath"
+    ldflags:
+      - -s -w -X golang.stackrox.io/kube-linter/internal/version.version={{.Version}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+
+archives:
+  - formats: [binary]
+    name_template: >-
+      {{ .ProjectName }}
+      {{- if eq .Os "windows" }}
+      {{- else }}-{{ .Os }}{{ end }}
+      {{- if eq .Arch "amd64" }}
+      {{- else }}_{{ .Arch }}{{ end }}
+  - id: archive
+    formats: [tar.gz]
+    name_template: >-
+      {{ .ProjectName }}-{{ .Os }}
+      {{- if eq .Arch "amd64" }}
+      {{- else }}_{{ .Arch }}{{ end }}
+
+dockers_v2:
+  - id: kube-linter
+    dockerfile: image/Dockerfile
+    ids:
+      - kube-linter
+    images:
+      - "ghcr.io/stackrox/kube-linter"
+      - "stackrox/kube-linter"
+    tags:
+      - "latest"
+      - "{{ .Tag }}"
+    platforms:
+      - linux/amd64
+      - linux/arm64
+    labels:
+      "org.opencontainers.image.title": "{{ .ProjectName }}"
+      "org.opencontainers.image.vendor": "RedHat"
+      "org.opencontainers.image.description": "Kube-Linter {{ .Version }}"
+      "org.opencontainers.image.url": "https://kubelinter.io"
+      "org.opencontainers.image.documentation": "https://docs.kubelinter.io/"
+      "org.opencontainers.image.source": "{{ .GitURL }}"
+      "org.opencontainers.image.licenses": "Apache"
+      "org.opencontainers.image.version": "{{ .Version }}"
+      "org.opencontainers.image.revision": "{{ .FullCommit }}"
+      "org.opencontainers.image.created": "{{ .CommitDate }}"
+
+  - id: kube-linter-alpine
+    dockerfile: image/Dockerfile_alpine
+    ids:
+      - kube-linter
+    images:
+      - "ghcr.io/stackrox/kube-linter"
+      - "stackrox/kube-linter"
+    tags:
+      - "latest-alpine"
+      - "{{ .Tag }}-alpine"
+    platforms:
+      - linux/amd64
+      - linux/arm64
+    labels:
+      "org.opencontainers.image.title": "{{ .ProjectName }}"
+      "org.opencontainers.image.vendor": "RedHat"
+      "org.opencontainers.image.description": "Kube-Linter {{ .Version }}"
+      "org.opencontainers.image.url": "https://kubelinter.io"
+      "org.opencontainers.image.documentation": "https://docs.kubelinter.io/"
+      "org.opencontainers.image.source": "{{ .GitURL }}"
+      "org.opencontainers.image.licenses": "Apache"
+      "org.opencontainers.image.version": "{{ .Version }}"
+      "org.opencontainers.image.revision": "{{ .FullCommit }}"
+      "org.opencontainers.image.created": "{{ .CommitDate }}"
+
+
+checksum:
+  disable: true
+
+signs:
+  - cmd: cosign
+    stdin: "{{ .Env.COSIGN_PASSWORD }}"
+    signature: "${artifact}.sigstore.json"
+    args:
+      - "sign-blob"
+      - "--key"
+      - "env://KEY"
+      - "--bundle=${signature}"
+      - "${artifact}"
+      - "--yes"
+    artifacts: binary
+
+docker_signs:
+  - cmd: cosign
+    artifacts: all
+    args:
+      - 'sign'
+      - '${artifact}'
+      - '--yes'
+  - id: key
+    cmd: cosign
+    artifacts: all
+    args:
+      - 'sign'
+      - "--key"
+      - "env://KEY"
+      - '${artifact}'
+      - '--yes'
+
+changelog:
+  use: github-native

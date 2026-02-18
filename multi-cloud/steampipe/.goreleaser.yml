@@ -1,0 +1,85 @@
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - env:
+      - CGO_ENABLED=0
+      - GO111MODULE=on
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+    id: "steampipe"
+    binary:
+      'steampipe'
+    ldflags:
+      # Go Releaser analyzes your Git repository and identifies the most recent Git tag (typically the highest version number) as the version for your release.
+      # This is how it determines the value of {{.Version}}.
+      - -s -w -X main.version={{.Version}} -X main.date={{.Date}} -X main.commit={{.Commit}} -X main.builtBy=goreleaser
+
+archives:
+  - files:
+    - none*
+    format: zip
+    id: homebrew
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+    - goos: linux
+      format: tar.gz
+
+nfpms:
+  - id: "steampipe"
+    builds: ['steampipe']
+    formats:
+      - deb
+      - rpm
+    vendor: "steampipe.io"
+    homepage: "https://steampipe.io/"
+    maintainer: "Turbot Support <help@turbot.com>"
+    description: "Use SQL to instantly query your cloud services (AWS, Azure, GCP and more). Open source CLI. No DB required."
+    file_name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    rpm:
+      summary: "Use SQL to instantly query your cloud services (AWS, Azure, GCP and more). Open source CLI. No DB required."
+
+# it is necessary to specify the name_template of the snapshot, or else the snapshot gets created with
+# two dash(-) which results in a 500 error while downloading
+snapshot:
+  name_template: '{{ .Version }}'
+
+# snapcrafts:
+#   - id: "steampipe"
+#     builds: ['steampipe']
+#     description: "Use SQL to instantly query your cloud services (AWS, Azure, GCP and more). Open source CLI. No DB required."
+#     summary: "Snap package"
+#     name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: 'checksums.txt'
+
+release:
+  prerelease: auto
+
+changelog:
+  disable: true
+
+brews:
+  -
+    ids:
+      - homebrew
+    name: steampipe@{{ .Major }}.{{ .Minor }}.{{ .Patch }}
+    repository:
+      owner: turbot
+      name: homebrew-tap
+      branch: bump-brew
+    directory: Formula
+    url_template: "https://github.com/turbot/steampipe/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    homepage: "https://steampipe.io/"
+    description: "Steampipe exposes APIs and services as a high-performance relational database, giving you the ability to write SQL-based queries to explore, assess and report on dynamic data."
+    skip_upload: auto
+    install: |-
+      bin.install "steampipe"

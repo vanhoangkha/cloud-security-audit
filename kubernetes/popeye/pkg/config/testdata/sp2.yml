@@ -1,0 +1,10 @@
+# A Sample Popeye configuration.
+popeye:
+  # Allocations ratios current to resources.
+  allocations:
+    cpu:
+      overPercUtilization: 200
+      underPercUtilization: 50
+    memory:
+      overPercUtilization: 200
+      underPercUtilization: 50

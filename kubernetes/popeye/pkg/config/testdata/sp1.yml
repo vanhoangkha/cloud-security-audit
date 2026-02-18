@@ -1,0 +1,45 @@
+popeye:
+  allocations:
+    cpu:
+      overPercUtilization: 200
+      underPercUtilization: 50
+    memory:
+      overPercUtilization: 200
+      underPercUtilization: 50
+
+  excludes:
+    global:
+      fqns: [rx:^ns1, rx:^ns2]
+
+    linters:
+      nodes:
+        instances:
+        - labels:
+            k8s-app: [app1]
+          codes: ["100"]
+
+      namespaces:
+        instances:
+        - labels:
+            group: [ns1]
+          codes: ["100"]
+
+      services:
+        instances:
+        - labels:
+            group: [ns1]
+          codes: ["100"]
+
+  resources:
+    node:
+      limits:
+        cpu: 90
+        memory: 80
+    pod:
+      restarts: 3
+      limits:
+        cpu: 80
+        memory: 75
+
+  registries:
+  - docker.io

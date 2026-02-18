@@ -1,0 +1,124 @@
+version: 2
+project_name: dockle
+builds:
+- main: ./cmd/dockle/
+  binary: dockle
+  ldflags:
+  - -s -w
+  - "-extldflags '-static'"
+  - -X github.com/goodwithtech/dockle/pkg.version={{.Version}}
+  env:
+  - CGO_ENABLED=0
+  goos:
+  - darwin
+  - linux
+  goarch:
+  - amd64
+  - 386
+  - arm
+  - arm64
+  - loong64
+  goarm:
+  - 7
+
+nfpms:
+  -
+    formats:
+      - apk
+      - deb
+      - rpm
+    vendor: "goodwithtech"
+    homepage: "https://github.com/goodwithtech"
+    maintainer: "Tomoya Amachi <tomoya.amachi@gmail.com>"
+    description: "A Security and Dockerfile checker for Containers"
+    license: "AGPL"
+    file_name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_
+      {{- if eq .Os "darwin" }}macOS
+      {{- else if eq .Os "openbsd" }}OpenBSD
+      {{- else if eq .Os "netbsd" }}NetBSD
+      {{- else if eq .Os "freebsd" }}FreeBSD
+      {{- else if eq .Os "dragonfly" }}DragonFlyBSD
+      {{- else}}{{- title .Os }}{{ end }}-
+      {{- if eq .Arch "amd64" }}64bit
+      {{- else if eq .Arch "arm" }}ARM
+      {{- else if eq .Arch "arm64" }}ARM64
+      {{- else }}{{ .Arch }}{{ end }}
+
+archives:
+  -
+    format: tar.gz
+    format_overrides:
+    - goos: windows
+      format: zip
+    name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_
+      {{- if eq .Os "darwin" }}macOS
+      {{- else if eq .Os "linux" }}Linux
+      {{- else if eq .Os "openbsd" }}OpenBSD
+      {{- else if eq .Os "netbsd" }}NetBSD
+      {{- else if eq .Os "freebsd" }}FreeBSD
+      {{- else if eq .Os "dragonfly" }}DragonFlyBSD
+      {{- else}}{{- .Os }}{{ end }}-
+      {{- if eq .Arch "amd64" }}64bit
+      {{- else if eq .Arch "arm" }}ARM
+      {{- else if eq .Arch "arm64" }}ARM64
+      {{- else if eq .Arch "loong64" }}LOONG64
+      {{- else }}{{ .Arch }}{{ end }}
+    files:
+    - README.md
+    - LICENSE
+
+brews:
+  -
+    repository:
+      owner: goodwithtech
+      name: homebrew-r
+    homepage: "https://github.com/goodwithtech/dockle"
+    description: "Simple security auditing, helping build the Best Docker Images"
+    test: |
+      system "#{bin}/program --version"
+
+dockers:
+  - image_templates:
+      - 'goodwithtech/dockle:{{ .Tag }}-amd64'
+      - 'ghcr.io/goodwithtech/dockle:{{ .Tag }}-amd64'
+    dockerfile: Dockerfile.releaser
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--platform=linux/amd64"
+  - image_templates:
+      - 'goodwithtech/dockle:{{ .Tag }}-arm64'
+      - 'ghcr.io/goodwithtech/dockle:{{ .Tag }}-arm64'
+    dockerfile: Dockerfile.releaser
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--platform=linux/arm64"
+    goarch: arm64
+docker_manifests:
+  - name_template: 'goodwithtech/dockle:{{ .Tag }}'
+    image_templates:
+      - 'goodwithtech/dockle:{{ .Tag }}-amd64'
+      - 'goodwithtech/dockle:{{ .Tag }}-arm64'
+  - name_template: 'ghcr.io/goodwithtech/dockle:{{ .Tag }}'
+    image_templates:
+      - 'ghcr.io/goodwithtech/dockle:{{ .Tag }}-amd64'
+      - 'ghcr.io/goodwithtech/dockle:{{ .Tag }}-arm64'
+  - name_template: 'goodwithtech/dockle:latest'
+    image_templates:
+      - 'goodwithtech/dockle:{{ .Tag }}-amd64'
+      - 'goodwithtech/dockle:{{ .Tag }}-arm64'
+  - name_template: 'ghcr.io/goodwithtech/dockle:latest'
+    image_templates:
+      - 'ghcr.io/goodwithtech/dockle:{{ .Tag }}-amd64'
+      - 'ghcr.io/goodwithtech/dockle:{{ .Tag }}-arm64'

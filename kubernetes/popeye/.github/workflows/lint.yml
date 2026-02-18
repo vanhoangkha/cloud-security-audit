@@ -1,0 +1,32 @@
+name: lint
+on:
+  push:
+    branches:
+      - main
+  pull_request: {}
+
+permissions: read-all
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4.2.2
+
+      - name: Install Go
+        uses: actions/setup-go@v5.4.0
+        with:
+          go-version-file: go.mod
+          cache-dependency-path: go.sum
+
+      - name: Setup GO env
+        run: go env -w CGO_ENABLED=0
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@9665fb5353a2e4cc60d570d956ab6db7d9949f06
+        with:
+          version: v1.60.3
+          args: --config=.golangci.yml --verbose --out-${NO_FUTURE}format colored-line-number
+          skip-cache: true

@@ -1,0 +1,17 @@
+{
+  "columns": [
+   {
+    "name": "transform_method_column",
+    "data_type": "text"
+   }
+  ],
+  "rows": [
+   {
+    "transform_method_column": "Transform method"
+   },
+   {
+    "transform_method_column": "Transform method"
+   }
+  ]
+ }
+ 

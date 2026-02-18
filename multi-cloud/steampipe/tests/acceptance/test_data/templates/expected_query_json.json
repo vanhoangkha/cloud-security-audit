@@ -1,0 +1,19 @@
+{
+  "columns": [
+   {
+    "name": "val",
+    "data_type": "int4"
+   },
+   {
+    "name": "col",
+    "data_type": "int4"
+   }
+  ],
+  "rows": [
+   {
+    "col": 2,
+    "val": 1
+   }
+  ]
+ }
+ 
