@@ -1,5 +1,9 @@
 # ☁️ Cloud Security Audit Tools Collection
 
+## Architecture
+
+![Architecture](docs/architecture.png)
+
 Comprehensive collection of 50+ open-source cloud security tools for AWS, GCP, Azure, Kubernetes, and containers.
 
 ## 📁 Structure
