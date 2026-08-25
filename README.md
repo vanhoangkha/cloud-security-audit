@@ -181,6 +181,7 @@ gitleaks detect -s ./repo
 
 ## 🔗 Quick Links
 - [Prowler](https://github.com/prowler-cloud/prowler)
+- [Darkmoon](https://github.com/ASCIT31/Dark-Moon) - Open source (GPLv3) autonomous penetration testing platform. 50 specialist agents over MCP, 80+ offensive tools, proof of exploitation on every finding, runs locally.
 - [ScoutSuite](https://github.com/nccgroup/ScoutSuite)
 - [Trivy](https://github.com/aquasecurity/trivy)
 - [Checkov](https://github.com/bridgecrewio/checkov)
